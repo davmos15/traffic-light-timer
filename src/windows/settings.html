@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Timer Settings</title>
+    <link rel="stylesheet" href="../css/settings.css">
+</head>
+<body>
+    <div class="settings-container">
+        <h2>Settings</h2>
+        
+        <div class="setting-group">
+            <h3>Widget Shape</h3>
+            <div class="shape-selector">
+                <label class="shape-option">
+                    <input type="radio" name="shape" value="circle" checked>
+                    <span class="shape-preview circle"></span>
+                    <span>Circle</span>
+                </label>
+                <label class="shape-option">
+                    <input type="radio" name="shape" value="square">
+                    <span class="shape-preview square"></span>
+                    <span>Square</span>
+                </label>
+                <label class="shape-option">
+                    <input type="radio" name="shape" value="star">
+                    <span class="shape-preview star"></span>
+                    <span>Star</span>
+                </label>
+                <label class="shape-option">
+                    <input type="radio" name="shape" value="triangle">
+                    <span class="shape-preview triangle"></span>
+                    <span>Triangle</span>
+                </label>
+                <label class="shape-option">
+                    <input type="radio" name="shape" value="diamond">
+                    <span class="shape-preview diamond"></span>
+                    <span>Diamond</span>
+                </label>
+                <label class="shape-option">
+                    <input type="radio" name="shape" value="hexagon">
+                    <span class="shape-preview hexagon"></span>
+                    <span>Hexagon</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="setting-group">
+            <h3>Default Timer Duration</h3>
+            <div class="duration-input">
+                <input type="number" id="default-minutes" min="0" max="999" value="5">
+                <span>minutes</span>
+                <input type="number" id="default-seconds" min="0" max="59" value="0">
+                <span>seconds</span>
+            </div>
+        </div>
+        
+        <div class="setting-group">
+            <h3>Widget Size</h3>
+            <div class="size-control">
+                <input type="range" id="size-slider" min="50" max="200" value="100" step="10">
+                <span id="size-display">100px</span>
+            </div>
+        </div>
+        
+        <div class="setting-group">
+            <h3>Window Behavior</h3>
+            <label class="checkbox-option">
+                <input type="checkbox" id="always-on-top" checked>
+                <span>Always on top</span>
+            </label>
+        </div>
+        
+        <div class="button-group">
+            <button id="save-btn" class="primary-btn">Save</button>
+            <button id="cancel-btn" class="secondary-btn">Cancel</button>
+        </div>
+    </div>
+    
+    <script src="../js/settings-renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    -webkit-app-region: drag;
+    user-select: none;
+    cursor: move;
+}
+
+.widget {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.1s ease;
+    position: relative;
+}
+
+#timer-display {
+    position: absolute;
+    color: rgba(0, 0, 0, 0.7);
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+}
+
+.circle {
+    border-radius: 50%;
+}
+
+.square {
+    border-radius: 0;
+}
+
+.star {
+    clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+    );
+}
+
+.triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.diamond {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.hexagon {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.widget:hover {
+    cursor: pointer;
+}
+
+.widget:active {
+    cursor: grabbing;
+}
