@@ -28,15 +28,43 @@
     ],
     "mac": {
       "category": "public.app-category.productivity",
-      "icon": "src/assets/icon.png"
+      "icon": "src/assets/icon.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ]
     },
     "win": {
-      "target": "nsis",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
       "icon": "src/assets/icon.png"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "src/assets/icon.png"
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "icon": "src/assets/icon.png",
+      "category": "Utility"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     }
   }
 }

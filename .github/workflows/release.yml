@@ -1,0 +1,69 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build application
+        run: npm run dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.os }}
+          path: dist/
+          retention-days: 1
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist-artifacts/
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: false
+          files: |
+            dist-artifacts/dist-windows-latest/*.exe
+            dist-artifacts/dist-windows-latest/*.msi
+            dist-artifacts/dist-macos-latest/*.dmg
+            dist-artifacts/dist-macos-latest/*.zip
+            dist-artifacts/dist-ubuntu-latest/*.AppImage
+            dist-artifacts/dist-ubuntu-latest/*.deb
+            dist-artifacts/dist-ubuntu-latest/*.rpm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

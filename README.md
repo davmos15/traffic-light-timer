@@ -31,13 +31,59 @@ A desktop timer widget application built with Electron that visually transitions
 - **Window Behavior**: Toggle always-on-top functionality
 - **Persistent Storage**: All settings and timer state saved automatically
 
-## Installation
+## Download
+
+### 🚀 Download Pre-built Releases
+Download the latest version for your platform from the [Releases page](https://github.com/yourusername/traffic-light-timer/releases).
+
+#### Available Downloads:
+- **Windows**: 
+  - `.exe` installer (recommended) - Full installation with Start Menu shortcuts
+  - Portable `.exe` - No installation required, just run
+- **macOS**: 
+  - `.dmg` disk image - Drag to Applications folder
+  - `.zip` archive - Extract and run
+- **Linux**: 
+  - `.AppImage` - Universal package, works on most distributions
+  - `.deb` - For Ubuntu, Debian, and derivatives
+  - `.rpm` - For Fedora, RHEL, openSUSE
+
+### 📦 Installation Instructions
+
+#### Windows
+1. Download the `.exe` installer from releases
+2. Double-click to run the installer
+3. Follow the installation wizard
+4. Launch from Start Menu or Desktop shortcut
+
+#### macOS
+1. Download the `.dmg` file from releases
+2. Double-click to mount the disk image
+3. Drag Traffic Light Timer to Applications folder
+4. Launch from Applications or Launchpad
+
+#### Linux
+- **AppImage**: 
+  ```bash
+  chmod +x Traffic-Light-Timer-*.AppImage
+  ./Traffic-Light-Timer-*.AppImage
+  ```
+- **DEB** (Ubuntu/Debian): 
+  ```bash
+  sudo dpkg -i traffic-light-timer_*.deb
+  ```
+- **RPM** (Fedora/RHEL): 
+  ```bash
+  sudo rpm -i traffic-light-timer-*.rpm
+  ```
+
+## Building from Source
 
 ### Prerequisites
 - **Node.js** (v16 or higher)
 - **npm** (comes with Node.js)
 
-### Quick Start
+### Development Setup
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/traffic-light-timer.git
@@ -46,7 +92,7 @@ cd traffic-light-timer
 # Install dependencies
 npm install
 
-# Run the application
+# Run in development mode
 npm start
 ```
 
@@ -81,16 +127,43 @@ npm start
 # Build for current platform
 npm run build
 
-# Build for specific platform
+# Build for all platforms
 npm run dist
 ```
 
 Built applications will be in the `dist/` folder.
 
 ### Supported Platforms
-- **Windows**: Creates `.exe` installer via NSIS
-- **macOS**: Creates `.dmg` package
-- **Linux**: Creates AppImage executable
+- **Windows**: Creates `.exe` installer and portable executable
+- **macOS**: Creates `.dmg` and `.zip` packages for Intel and Apple Silicon
+- **Linux**: Creates `.AppImage`, `.deb`, and `.rpm` packages
+
+### Creating a New Release
+
+1. Update version in `package.json`:
+   ```json
+   "version": "1.1.0"
+   ```
+
+2. Commit your changes:
+   ```bash
+   git add .
+   git commit -m "Release version 1.1.0"
+   ```
+
+3. Create and push a version tag:
+   ```bash
+   git tag v1.1.0
+   git push origin main
+   git push origin v1.1.0
+   ```
+
+4. GitHub Actions will automatically:
+   - Build the app for all platforms
+   - Create a new GitHub release
+   - Upload all distribution files
+
+The release will be available at `https://github.com/yourusername/traffic-light-timer/releases`
 
 ## Project Structure
 
