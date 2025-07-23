@@ -1,6 +1,6 @@
 {
   "name": "traffic-light-timer",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A desktop timer widget that transitions from green to red",
   "main": "src/main.js",
   "scripts": {

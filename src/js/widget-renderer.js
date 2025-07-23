@@ -78,18 +78,33 @@ function saveTimerState() {
   ipcRenderer.send('save-timer-state', state);
 }
 
-widget.addEventListener('mousedown', (e) => {
-  isClicking = true;
-  setTimeout(() => {
-    isClicking = false;
-  }, 200);
+// Simple click handler to open controls
+widget.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  ipcRenderer.send('open-controls');
 });
 
-widget.addEventListener('click', (e) => {
-  if (isClicking) {
+// Right-click to open settings
+widget.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('open-settings');
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'o') {
     e.preventDefault();
-    e.stopPropagation();
     ipcRenderer.send('open-controls');
+  }
+  if (e.ctrlKey && e.key === 's') {
+    e.preventDefault();
+    ipcRenderer.send('open-settings');
+  }
+  if (e.key === 'r') {
+    e.preventDefault();
+    timer.stop();
+    timer.start(settings.defaultDuration);
   }
 });
 
