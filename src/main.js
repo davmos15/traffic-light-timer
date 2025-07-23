@@ -56,6 +56,11 @@ function createWidgetWindow() {
 
   widgetWindow.loadFile(path.join(__dirname, 'windows', 'widget.html'));
   
+  // Open dev tools for debugging
+  if (process.argv.includes('--dev')) {
+    widgetWindow.webContents.openDevTools();
+  }
+  
   widgetWindow.on('closed', () => {
     widgetWindow = null;
     if (controlsWindow && !controlsWindow.isDestroyed()) {

@@ -80,13 +80,23 @@ function saveTimerState() {
 
 // Simple click handler to open controls
 widget.addEventListener('click', (e) => {
+  console.log('Widget clicked!');
   e.preventDefault();
   e.stopPropagation();
   ipcRenderer.send('open-controls');
 });
 
+// Also try mouseup as backup
+widget.addEventListener('mouseup', (e) => {
+  console.log('Widget mouse up!');
+  if (e.button === 0) { // Left click
+    ipcRenderer.send('open-controls');
+  }
+});
+
 // Right-click to open settings
 widget.addEventListener('contextmenu', (e) => {
+  console.log('Widget right-clicked!');
   e.preventDefault();
   ipcRenderer.send('open-settings');
 });
