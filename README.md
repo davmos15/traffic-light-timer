@@ -36,6 +36,9 @@ A desktop timer widget application built with Electron that visually transitions
   - Toggle time display on widget
   - Enable flashing when timer completes
   - Always-on-top functionality
+- **Completion Alerts**:
+  - Optional popup message when timer completes
+  - Customizable completion message text
 - **Persistent Storage**: All settings and timer state saved automatically
 
 ## Download
@@ -127,6 +130,7 @@ npm start
    - Size (50px - 200px)
    - Default timer duration
    - Display options (time visibility, flashing, always on top)
+   - Completion alerts (popup message with custom text)
 4. Click "Save Settings" to apply changes
 
 ## Building for Distribution

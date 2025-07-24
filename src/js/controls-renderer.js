@@ -26,6 +26,9 @@ const sizeDisplay = document.getElementById('size-display');
 const alwaysOnTopCheckbox = document.getElementById('always-on-top');
 const showTimerDisplayCheckbox = document.getElementById('show-timer-display');
 const flashOnCompleteCheckbox = document.getElementById('flash-on-complete');
+const showPopupOnCompleteCheckbox = document.getElementById('show-popup-on-complete');
+const popupMessageInput = document.getElementById('popup-message');
+const popupMessageGroup = document.getElementById('popup-message-group');
 const saveSettingsBtn = document.getElementById('save-settings-btn');
 
 let currentState = {
@@ -161,6 +164,11 @@ async function loadSettings() {
     alwaysOnTopCheckbox.checked = currentSettings.alwaysOnTop;
     showTimerDisplayCheckbox.checked = currentSettings.showTimerDisplay !== false;
     flashOnCompleteCheckbox.checked = currentSettings.flashOnComplete === true;
+    showPopupOnCompleteCheckbox.checked = currentSettings.showPopupOnComplete === true;
+    
+    // Set popup message
+    popupMessageInput.value = currentSettings.popupMessage || 'Timer completed!';
+    popupMessageGroup.style.display = currentSettings.showPopupOnComplete ? 'block' : 'none';
 }
 
 // Settings events
@@ -178,6 +186,10 @@ defaultSecondsInput.addEventListener('input', (e) => {
     if (e.target.value < 0) e.target.value = 0;
 });
 
+showPopupOnCompleteCheckbox.addEventListener('change', (e) => {
+    popupMessageGroup.style.display = e.target.checked ? 'block' : 'none';
+});
+
 saveSettingsBtn.addEventListener('click', () => {
     const shape = document.querySelector('input[name="shape"]:checked').value;
     const screenPosition = screenPositionSelect.value;
@@ -188,6 +200,8 @@ saveSettingsBtn.addEventListener('click', () => {
     const alwaysOnTop = alwaysOnTopCheckbox.checked;
     const showTimerDisplay = showTimerDisplayCheckbox.checked;
     const flashOnComplete = flashOnCompleteCheckbox.checked;
+    const showPopupOnComplete = showPopupOnCompleteCheckbox.checked;
+    const popupMessage = popupMessageInput.value || 'Timer completed!';
     
     const newSettings = {
         shape,
@@ -196,7 +210,9 @@ saveSettingsBtn.addEventListener('click', () => {
         widgetSize,
         alwaysOnTop,
         showTimerDisplay,
-        flashOnComplete
+        flashOnComplete,
+        showPopupOnComplete,
+        popupMessage
     };
     
     ipcRenderer.send('save-settings', newSettings);

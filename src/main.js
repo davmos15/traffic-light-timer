@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -17,7 +17,9 @@ let settings = {
   colorTheme: 'default',
   flashOnComplete: false,
   showTimerDisplay: true,
-  screenPosition: 'bottom-right'
+  screenPosition: 'bottom-right',
+  showPopupOnComplete: false,
+  popupMessage: 'Timer completed!'
 };
 
 function loadSettings() {
@@ -247,5 +249,16 @@ ipcMain.on('timer-update', (event, data) => {
 ipcMain.on('timer-command', (event, command, data) => {
   if (widgetWindow && !widgetWindow.isDestroyed()) {
     widgetWindow.webContents.send('timer-command', command, data);
+  }
+});
+
+ipcMain.on('show-completion-popup', () => {
+  if (settings.showPopupOnComplete) {
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Timer Complete',
+      message: settings.popupMessage,
+      buttons: ['OK']
+    });
   }
 });

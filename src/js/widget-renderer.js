@@ -89,6 +89,7 @@ function updateWidget(state) {
 
 function handleComplete() {
   console.log('Timer completed!');
+  ipcRenderer.send('show-completion-popup');
 }
 
 function saveTimerState() {
