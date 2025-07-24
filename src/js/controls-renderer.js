@@ -232,3 +232,6 @@ ipcRenderer.on('timer-command', (event, command, data) => {
 
 // Initialize
 loadSettings();
+
+// Request initial timer state
+ipcRenderer.send('request-timer-state');

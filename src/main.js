@@ -262,3 +262,10 @@ ipcMain.on('show-completion-popup', () => {
     });
   }
 });
+
+ipcMain.on('request-timer-state', (event) => {
+  // Forward request to widget window which has the timer
+  if (widgetWindow && !widgetWindow.isDestroyed()) {
+    widgetWindow.webContents.send('request-timer-state');
+  }
+});

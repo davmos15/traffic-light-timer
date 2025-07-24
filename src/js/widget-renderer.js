@@ -177,4 +177,10 @@ ipcRenderer.on('timer-command', (event, command, data) => {
   }
 });
 
+ipcRenderer.on('request-timer-state', () => {
+  // Send current timer state
+  const state = timer.getState();
+  ipcRenderer.send('timer-update', state);
+});
+
 init();
