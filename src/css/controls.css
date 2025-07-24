@@ -326,17 +326,17 @@ h3 {
     color: #666;
 }
 
-.size-control {
+.size-control, .opacity-control {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-#size-slider {
+#size-slider, #opacity-slider {
     flex: 1;
 }
 
-#size-display {
+#size-display, #opacity-display {
     font-weight: bold;
     color: #333;
     min-width: 50px;

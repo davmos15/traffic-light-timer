@@ -55,6 +55,10 @@ class Timer {
   pause() {
     if (!this.isRunning || this.isPaused) return;
     
+    // Save current time remaining before pausing
+    const elapsed = Date.now() - this.startTime;
+    this.timeRemaining = Math.max(0, this.duration - elapsed);
+    
     this.isPaused = true;
     this.pausedTime = Date.now();
     
@@ -63,18 +67,20 @@ class Timer {
       this.interval = null;
     }
     
+    this._notifyUpdate();
     this._notifyStateChange();
   }
 
   resume() {
     if (!this.isRunning || !this.isPaused) return;
     
-    const pauseDuration = Date.now() - this.pausedTime;
-    this.startTime += pauseDuration;
+    // Reset start time based on remaining time
+    this.startTime = Date.now() - (this.duration - this.timeRemaining);
     this.isPaused = false;
     this.pausedTime = 0;
     
     this._startInterval();
+    this._notifyUpdate();
     this._notifyStateChange();
   }
 

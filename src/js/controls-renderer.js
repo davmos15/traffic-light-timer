@@ -23,6 +23,8 @@ const defaultMinutesInput = document.getElementById('default-minutes');
 const defaultSecondsInput = document.getElementById('default-seconds');
 const sizeSlider = document.getElementById('size-slider');
 const sizeDisplay = document.getElementById('size-display');
+const opacitySlider = document.getElementById('opacity-slider');
+const opacityDisplay = document.getElementById('opacity-display');
 const alwaysOnTopCheckbox = document.getElementById('always-on-top');
 const showTimerDisplayCheckbox = document.getElementById('show-timer-display');
 const flashOnCompleteCheckbox = document.getElementById('flash-on-complete');
@@ -160,6 +162,10 @@ async function loadSettings() {
     sizeSlider.value = currentSettings.widgetSize;
     sizeDisplay.textContent = `${currentSettings.widgetSize}px`;
     
+    // Set opacity
+    opacitySlider.value = currentSettings.opacity || 100;
+    opacityDisplay.textContent = `${currentSettings.opacity || 100}%`;
+    
     // Set checkboxes
     alwaysOnTopCheckbox.checked = currentSettings.alwaysOnTop;
     showTimerDisplayCheckbox.checked = currentSettings.showTimerDisplay !== false;
@@ -174,6 +180,10 @@ async function loadSettings() {
 // Settings events
 sizeSlider.addEventListener('input', (e) => {
     sizeDisplay.textContent = `${e.target.value}px`;
+});
+
+opacitySlider.addEventListener('input', (e) => {
+    opacityDisplay.textContent = `${e.target.value}%`;
 });
 
 defaultMinutesInput.addEventListener('input', (e) => {
@@ -197,6 +207,7 @@ saveSettingsBtn.addEventListener('click', () => {
     const seconds = parseInt(defaultSecondsInput.value) || 0;
     const defaultDuration = (minutes * 60 + seconds) * 1000;
     const widgetSize = parseInt(sizeSlider.value);
+    const opacity = parseInt(opacitySlider.value);
     const alwaysOnTop = alwaysOnTopCheckbox.checked;
     const showTimerDisplay = showTimerDisplayCheckbox.checked;
     const flashOnComplete = flashOnCompleteCheckbox.checked;
@@ -208,6 +219,7 @@ saveSettingsBtn.addEventListener('click', () => {
         screenPosition,
         defaultDuration,
         widgetSize,
+        opacity,
         alwaysOnTop,
         showTimerDisplay,
         flashOnComplete,

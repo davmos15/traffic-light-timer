@@ -19,7 +19,8 @@ let settings = {
   showTimerDisplay: true,
   screenPosition: 'bottom-right',
   showPopupOnComplete: false,
-  popupMessage: 'Timer completed!'
+  popupMessage: 'Timer completed!',
+  opacity: 100
 };
 
 function loadSettings() {
@@ -200,6 +201,7 @@ ipcMain.handle('get-settings', () => {
 });
 
 ipcMain.on('save-settings', (event, newSettings) => {
+  const currentSettings = { ...settings };
   settings = { ...settings, ...newSettings };
   saveSettings();
   
@@ -207,12 +209,30 @@ ipcMain.on('save-settings', (event, newSettings) => {
     widgetWindow.webContents.send('settings-updated', settings);
     
     if (settings.widgetSize !== widgetWindow.getBounds().width) {
-      widgetWindow.setSize(settings.widgetSize, settings.widgetSize);
+      // Get current bounds before resizing
+      const currentBounds = widgetWindow.getBounds();
+      const oldSize = currentBounds.width;
+      const newSize = settings.widgetSize;
+      
+      // Calculate position adjustment to keep widget centered
+      const sizeDiff = (oldSize - newSize) / 2;
+      const newX = currentBounds.x + sizeDiff;
+      const newY = currentBounds.y + sizeDiff;
+      
+      // Set new size
+      widgetWindow.setSize(newSize, newSize);
+      
+      // Only adjust position if not changing screen position setting
+      if (!newSettings.screenPosition || newSettings.screenPosition === currentSettings.screenPosition) {
+        widgetWindow.setPosition(Math.round(newX), Math.round(newY));
+      }
     }
     
     // Update position if screen position changed
-    const position = getWidgetPosition();
-    widgetWindow.setPosition(position.x, position.y);
+    if (newSettings.screenPosition && newSettings.screenPosition !== currentSettings.screenPosition) {
+      const position = getWidgetPosition();
+      widgetWindow.setPosition(position.x, position.y);
+    }
     
     widgetWindow.setAlwaysOnTop(settings.alwaysOnTop);
   }
@@ -254,11 +274,16 @@ ipcMain.on('timer-command', (event, command, data) => {
 
 ipcMain.on('show-completion-popup', () => {
   if (settings.showPopupOnComplete) {
-    dialog.showMessageBox({
+    // Get the focused window or widget window as parent
+    const parentWindow = BrowserWindow.getFocusedWindow() || widgetWindow;
+    
+    dialog.showMessageBox(parentWindow, {
       type: 'info',
       title: 'Timer Complete',
       message: settings.popupMessage,
-      buttons: ['OK']
+      buttons: ['OK'],
+      defaultId: 0,
+      noLink: true
     });
   }
 });

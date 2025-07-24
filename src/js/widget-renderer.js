@@ -32,6 +32,14 @@ async function init() {
 
 function applySettings() {
   widget.className = `widget ${settings.shape}`;
+  
+  // Calculate font size scale based on widget size (100px is the default)
+  const sizeScale = settings.widgetSize / 100;
+  document.documentElement.style.setProperty('--size-scale', sizeScale);
+  
+  // Apply opacity
+  const opacity = (settings.opacity || 100) / 100;
+  widget.style.opacity = opacity;
 }
 
 function interpolateColor(progress) {

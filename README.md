@@ -10,8 +10,10 @@ A desktop timer widget application built with Electron that visually transitions
 - **Compact Design**: Small, circular widget (100x100px default, customizable 50-200px)
 - **Color Transitions**: Smooth progression from green → yellow → red
 - **Smart Positioning**: Choose from preset positions (corners, center) or drag anywhere
+- **Adjustable Opacity**: Control widget transparency for subtle desktop integration
 - **Always on Top**: Stays visible above all other windows (toggleable)
 - **Completion Indicator**: Stays red when timer finishes with optional flashing
+- **Responsive Text**: Timer display scales proportionally with widget size
 - **Transparent**: Frameless design that blends with your desktop
 
 ### 🎨 Visual System
@@ -30,7 +32,8 @@ A desktop timer widget application built with Electron that visually transitions
 ### ⚙️ Settings & Customization
 - **Widget Position**: Choose from preset positions (Top Left, Top Right, Bottom Left, Bottom Right, Center)
 - **Shape Selection**: Choose from 6 different widget shapes
-- **Size Adjustment**: Scale from 50px to 200px
+- **Size Adjustment**: Scale from 50px to 200px with proportional text scaling
+- **Opacity Control**: Adjust widget transparency from 20% to 100%
 - **Default Duration**: Set your preferred starting time
 - **Display Options**: 
   - Toggle time display on widget
@@ -39,6 +42,7 @@ A desktop timer widget application built with Electron that visually transitions
 - **Completion Alerts**:
   - Optional popup message when timer completes
   - Customizable completion message text
+  - Popup appears on top of other windows
 - **Persistent Storage**: All settings and timer state saved automatically
 
 ## Download
@@ -116,10 +120,11 @@ npm start
 5. **Timer completion** - Widget stays red when finished (optional flashing available)
 
 ### Timer Controls
-- **Pause/Resume**: Click the pause button or use the widget controls
-- **Add Time**: Use quick buttons or set custom duration
+- **Pause/Resume**: Click the pause button to pause, shows "Resume" when paused
+- **Add Time**: Use quick buttons (+1, +5, +15 min) or set custom duration
 - **Restart**: Reset timer to default or last set duration
 - **Stop**: Stop timer and reset to beginning
+- **Smart Resume**: Timer resumes from exact paused position
 
 ### Customization
 1. Click the widget to open controls
@@ -127,7 +132,8 @@ npm start
 3. Choose your preferred:
    - Screen position (corners or center)
    - Widget shape (circle, square, star, etc.)
-   - Size (50px - 200px)
+   - Size (50px - 200px) with auto-scaling text
+   - Opacity (20% - 100%) for transparency control
    - Default timer duration
    - Display options (time visibility, flashing, always on top)
    - Completion alerts (popup message with custom text)
