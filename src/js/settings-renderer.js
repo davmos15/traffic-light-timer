@@ -5,6 +5,8 @@ const defaultSecondsInput = document.getElementById('default-seconds');
 const sizeSlider = document.getElementById('size-slider');
 const sizeDisplay = document.getElementById('size-display');
 const alwaysOnTopCheckbox = document.getElementById('always-on-top');
+const showTimerDisplayCheckbox = document.getElementById('show-timer-display');
+const flashOnCompleteCheckbox = document.getElementById('flash-on-complete');
 const saveBtn = document.getElementById('save-btn');
 const cancelBtn = document.getElementById('cancel-btn');
 
@@ -25,6 +27,10 @@ async function loadSettings() {
     sizeDisplay.textContent = `${currentSettings.widgetSize}px`;
     
     alwaysOnTopCheckbox.checked = currentSettings.alwaysOnTop;
+    
+    // Set new checkbox values
+    showTimerDisplayCheckbox.checked = currentSettings.showTimerDisplay !== false;
+    flashOnCompleteCheckbox.checked = currentSettings.flashOnComplete === true;
 }
 
 sizeSlider.addEventListener('input', (e) => {
@@ -48,12 +54,16 @@ saveBtn.addEventListener('click', () => {
     const defaultDuration = (minutes * 60 + seconds) * 1000;
     const widgetSize = parseInt(sizeSlider.value);
     const alwaysOnTop = alwaysOnTopCheckbox.checked;
+    const showTimerDisplay = showTimerDisplayCheckbox.checked;
+    const flashOnComplete = flashOnCompleteCheckbox.checked;
     
     const newSettings = {
         shape,
         defaultDuration,
         widgetSize,
-        alwaysOnTop
+        alwaysOnTop,
+        showTimerDisplay,
+        flashOnComplete
     };
     
     ipcRenderer.send('save-settings', newSettings);

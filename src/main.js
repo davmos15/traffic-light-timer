@@ -15,7 +15,9 @@ let settings = {
   defaultDuration: 300000,
   widgetSize: 100,
   alwaysOnTop: true,
-  colorTheme: 'default'
+  colorTheme: 'default',
+  flashOnComplete: false,
+  showTimerDisplay: true
 };
 
 function loadSettings() {

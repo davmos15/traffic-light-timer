@@ -6,6 +6,7 @@ class Timer {
     this.pausedTime = 0;
     this.isPaused = false;
     this.isRunning = false;
+    this.isCompleted = false;
     this.interval = null;
     this.callbacks = {
       onUpdate: null,
@@ -27,6 +28,7 @@ class Timer {
     this.startTime = Date.now() - (this.duration - this.timeRemaining);
     this.isPaused = false;
     this.isRunning = true;
+    this.isCompleted = false;
     this.pausedTime = 0;
     
     this._startInterval();
@@ -36,6 +38,7 @@ class Timer {
   stop() {
     this.isRunning = false;
     this.isPaused = false;
+    this.isCompleted = false;
     this.timeRemaining = this.duration;
     this.startTime = null;
     this.pausedTime = 0;
@@ -110,6 +113,7 @@ class Timer {
       timeRemaining: this.timeRemaining,
       isRunning: this.isRunning,
       isPaused: this.isPaused,
+      isCompleted: this.isCompleted,
       progress: this.getProgress()
     };
   }
@@ -119,6 +123,7 @@ class Timer {
     
     this.duration = state.duration || 300000;
     this.timeRemaining = state.timeRemaining || this.duration;
+    this.isCompleted = state.isCompleted || false;
     
     if (state.isRunning && !state.isPaused) {
       this.start();
@@ -127,6 +132,9 @@ class Timer {
     } else if (state.isRunning && state.isPaused) {
       this.isRunning = true;
       this.isPaused = true;
+      this._notifyUpdate();
+      this._notifyStateChange();
+    } else if (this.isCompleted) {
       this._notifyUpdate();
       this._notifyStateChange();
     }
@@ -151,7 +159,14 @@ class Timer {
     this._notifyUpdate();
     
     if (this.timeRemaining === 0) {
-      this.stop();
+      this.isRunning = false;
+      this.isCompleted = true;
+      if (this.interval) {
+        clearInterval(this.interval);
+        this.interval = null;
+      }
+      this._notifyUpdate();
+      this._notifyStateChange();
       if (this.callbacks.onComplete) {
         this.callbacks.onComplete();
       }

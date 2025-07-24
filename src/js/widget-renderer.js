@@ -6,6 +6,7 @@ const timerDisplay = document.getElementById('timer-display');
 let timer = new Timer();
 let settings = null;
 let isClicking = false;
+let flashInterval = null;
 
 async function init() {
   settings = await ipcRenderer.invoke('get-settings');
@@ -57,9 +58,26 @@ function interpolateColor(progress) {
 
 function updateWidget(state) {
   const color = interpolateColor(state.progress);
-  widget.style.backgroundColor = color;
   
-  if (state.isRunning || state.timeRemaining < state.duration) {
+  if (state.isCompleted) {
+    widget.style.backgroundColor = 'hsl(0, 100%, 50%)';
+    
+    if (settings.flashOnComplete && !flashInterval) {
+      let isRed = true;
+      flashInterval = setInterval(() => {
+        widget.style.backgroundColor = isRed ? 'hsl(0, 100%, 50%)' : 'hsl(0, 100%, 30%)';
+        isRed = !isRed;
+      }, 500);
+    }
+  } else {
+    if (flashInterval) {
+      clearInterval(flashInterval);
+      flashInterval = null;
+    }
+    widget.style.backgroundColor = color;
+  }
+  
+  if (settings.showTimerDisplay && (state.isRunning || state.isPaused || state.timeRemaining < state.duration)) {
     timerDisplay.textContent = timer.formatTime();
     timerDisplay.style.display = 'block';
   } else {
@@ -121,6 +139,15 @@ document.addEventListener('keydown', (e) => {
 ipcRenderer.on('settings-updated', (event, newSettings) => {
   settings = newSettings;
   applySettings();
+  
+  // Clear flashing if disabled
+  if (!settings.flashOnComplete && flashInterval) {
+    clearInterval(flashInterval);
+    flashInterval = null;
+  }
+  
+  // Update display based on new settings
+  updateWidget(timer.getState());
 });
 
 ipcRenderer.on('timer-command', (event, command, data) => {
