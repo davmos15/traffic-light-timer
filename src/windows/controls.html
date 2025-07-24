@@ -7,7 +7,13 @@
 </head>
 <body>
     <div class="controls-container">
-        <h2>Timer Controls</h2>
+        <div class="header-buttons">
+            <button id="controls-tab" class="tab-btn active">Timer</button>
+            <button id="settings-tab" class="tab-btn">Settings</button>
+        </div>
+        
+        <div id="controls-panel" class="panel active">
+            <h2>Timer Controls</h2>
         
         <div class="timer-display">
             <div id="time-display">5:00</div>
@@ -39,9 +45,98 @@
             </div>
         </div>
         
-        <div class="bottom-buttons">
-            <button id="settings-btn" class="bottom-btn">Settings</button>
-            <button id="close-btn" class="bottom-btn">Close</button>
+            <div class="bottom-buttons">
+                <button id="close-btn" class="bottom-btn">Close</button>
+            </div>
+        </div>
+        
+        <div id="settings-panel" class="panel">
+            <h2>Settings</h2>
+            
+            <div class="setting-group">
+                <h3>Widget Position</h3>
+                <select id="screen-position">
+                    <option value="top-left">Top Left</option>
+                    <option value="top-right">Top Right</option>
+                    <option value="bottom-left">Bottom Left</option>
+                    <option value="bottom-right" selected>Bottom Right</option>
+                    <option value="center">Center</option>
+                </select>
+            </div>
+            
+            <div class="setting-group">
+                <h3>Widget Shape</h3>
+                <div class="shape-selector">
+                    <label class="shape-option">
+                        <input type="radio" name="shape" value="circle" checked>
+                        <span class="shape-preview circle"></span>
+                        <span>Circle</span>
+                    </label>
+                    <label class="shape-option">
+                        <input type="radio" name="shape" value="square">
+                        <span class="shape-preview square"></span>
+                        <span>Square</span>
+                    </label>
+                    <label class="shape-option">
+                        <input type="radio" name="shape" value="star">
+                        <span class="shape-preview star"></span>
+                        <span>Star</span>
+                    </label>
+                    <label class="shape-option">
+                        <input type="radio" name="shape" value="triangle">
+                        <span class="shape-preview triangle"></span>
+                        <span>Triangle</span>
+                    </label>
+                    <label class="shape-option">
+                        <input type="radio" name="shape" value="diamond">
+                        <span class="shape-preview diamond"></span>
+                        <span>Diamond</span>
+                    </label>
+                    <label class="shape-option">
+                        <input type="radio" name="shape" value="hexagon">
+                        <span class="shape-preview hexagon"></span>
+                        <span>Hexagon</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <h3>Default Timer Duration</h3>
+                <div class="duration-input">
+                    <input type="number" id="default-minutes" min="0" max="999" value="5">
+                    <span>minutes</span>
+                    <input type="number" id="default-seconds" min="0" max="59" value="0">
+                    <span>seconds</span>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <h3>Widget Size</h3>
+                <div class="size-control">
+                    <input type="range" id="size-slider" min="50" max="200" value="100" step="10">
+                    <span id="size-display">100px</span>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <h3>Display Options</h3>
+                <label class="checkbox-option">
+                    <input type="checkbox" id="always-on-top" checked>
+                    <span>Always on top</span>
+                </label>
+                <label class="checkbox-option">
+                    <input type="checkbox" id="show-timer-display" checked>
+                    <span>Show time remaining</span>
+                </label>
+                <label class="checkbox-option">
+                    <input type="checkbox" id="flash-on-complete">
+                    <span>Flash when timer completes</span>
+                </label>
+            </div>
+            
+            <div class="button-group">
+                <button id="save-settings-btn" class="primary-btn">Save Settings</button>
+            </div>
         </div>
     </div>
     

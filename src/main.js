@@ -4,7 +4,6 @@ const fs = require('fs');
 
 let widgetWindow;
 let controlsWindow;
-let settingsWindow;
 
 const userDataPath = app.getPath('userData');
 const settingsPath = path.join(userDataPath, 'settings.json');
@@ -17,7 +16,8 @@ let settings = {
   alwaysOnTop: true,
   colorTheme: 'default',
   flashOnComplete: false,
-  showTimerDisplay: true
+  showTimerDisplay: true,
+  screenPosition: 'bottom-right'
 };
 
 function loadSettings() {
@@ -39,12 +39,50 @@ function saveSettings() {
   }
 }
 
+function getWidgetPosition() {
+  const { width: screenWidth, height: screenHeight } = require('electron').screen.getPrimaryDisplay().workAreaSize;
+  const widgetSize = settings.widgetSize;
+  const margin = 20;
+  
+  let x, y;
+  
+  switch (settings.screenPosition) {
+    case 'top-left':
+      x = margin;
+      y = margin;
+      break;
+    case 'top-right':
+      x = screenWidth - widgetSize - margin;
+      y = margin;
+      break;
+    case 'bottom-left':
+      x = margin;
+      y = screenHeight - widgetSize - margin;
+      break;
+    case 'bottom-right':
+    default:
+      x = screenWidth - widgetSize - margin;
+      y = screenHeight - widgetSize - margin;
+      break;
+    case 'center':
+      x = Math.floor((screenWidth - widgetSize) / 2);
+      y = Math.floor((screenHeight - widgetSize) / 2);
+      break;
+  }
+  
+  return { x, y };
+}
+
 function createWidgetWindow() {
   loadSettings();
+  
+  const position = getWidgetPosition();
   
   widgetWindow = new BrowserWindow({
     width: settings.widgetSize,
     height: settings.widgetSize,
+    x: position.x,
+    y: position.y,
     frame: false,
     transparent: true,
     alwaysOnTop: settings.alwaysOnTop,
@@ -68,15 +106,9 @@ function createWidgetWindow() {
     if (controlsWindow && !controlsWindow.isDestroyed()) {
       controlsWindow.close();
     }
-    if (settingsWindow && !settingsWindow.isDestroyed()) {
-      settingsWindow.close();
-    }
   });
 
-  const savedBounds = loadWindowBounds();
-  if (savedBounds) {
-    widgetWindow.setBounds(savedBounds);
-  }
+  // Don't use saved bounds anymore since we use screen position setting
 }
 
 function createControlsWindow() {
@@ -86,8 +118,8 @@ function createControlsWindow() {
   }
 
   controlsWindow = new BrowserWindow({
-    width: 300,
-    height: 400,
+    width: 400,
+    height: 600,
     frame: true,
     resizable: false,
     alwaysOnTop: settings.alwaysOnTop,
@@ -104,29 +136,6 @@ function createControlsWindow() {
   });
 }
 
-function createSettingsWindow() {
-  if (settingsWindow && !settingsWindow.isDestroyed()) {
-    settingsWindow.focus();
-    return;
-  }
-
-  settingsWindow = new BrowserWindow({
-    width: 400,
-    height: 500,
-    frame: true,
-    resizable: false,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  });
-
-  settingsWindow.loadFile(path.join(__dirname, 'windows', 'settings.html'));
-
-  settingsWindow.on('closed', () => {
-    settingsWindow = null;
-  });
-}
 
 function loadWindowBounds() {
   try {
@@ -176,9 +185,6 @@ ipcMain.on('open-controls', () => {
   createControlsWindow();
 });
 
-ipcMain.on('open-settings', () => {
-  createSettingsWindow();
-});
 
 ipcMain.on('close-controls', () => {
   if (controlsWindow && !controlsWindow.isDestroyed()) {
@@ -186,11 +192,6 @@ ipcMain.on('close-controls', () => {
   }
 });
 
-ipcMain.on('close-settings', () => {
-  if (settingsWindow && !settingsWindow.isDestroyed()) {
-    settingsWindow.close();
-  }
-});
 
 ipcMain.handle('get-settings', () => {
   return settings;
@@ -206,6 +207,10 @@ ipcMain.on('save-settings', (event, newSettings) => {
     if (settings.widgetSize !== widgetWindow.getBounds().width) {
       widgetWindow.setSize(settings.widgetSize, settings.widgetSize);
     }
+    
+    // Update position if screen position changed
+    const position = getWidgetPosition();
+    widgetWindow.setPosition(position.x, position.y);
     
     widgetWindow.setAlwaysOnTop(settings.alwaysOnTop);
   }

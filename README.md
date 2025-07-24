@@ -9,8 +9,9 @@ A desktop timer widget application built with Electron that visually transitions
 ### 🎯 Main Timer Widget
 - **Compact Design**: Small, circular widget (100x100px default, customizable 50-200px)
 - **Color Transitions**: Smooth progression from green → yellow → red
+- **Smart Positioning**: Choose from preset positions (corners, center) or drag anywhere
 - **Always on Top**: Stays visible above all other windows (toggleable)
-- **Draggable**: Position anywhere on your screen
+- **Completion Indicator**: Stays red when timer finishes with optional flashing
 - **Transparent**: Frameless design that blends with your desktop
 
 ### 🎨 Visual System
@@ -19,16 +20,22 @@ A desktop timer widget application built with Electron that visually transitions
 - **Real-time Updates**: Millisecond-precision timer with live color feedback
 
 ### 🎛️ Control Panel
+- **Tabbed Interface**: Timer controls and settings in one window
 - **Timer Controls**: Start, Stop, Pause, Resume, Restart
 - **Quick Add Time**: +1 min, +5 min, +15 min buttons  
 - **Custom Duration**: Set any time with minutes:seconds input
 - **Live Display**: Current time remaining and timer status
+- **Settings Tab**: All customization options easily accessible
 
 ### ⚙️ Settings & Customization
+- **Widget Position**: Choose from preset positions (Top Left, Top Right, Bottom Left, Bottom Right, Center)
 - **Shape Selection**: Choose from 6 different widget shapes
 - **Size Adjustment**: Scale from 50px to 200px
 - **Default Duration**: Set your preferred starting time
-- **Window Behavior**: Toggle always-on-top functionality
+- **Display Options**: 
+  - Toggle time display on widget
+  - Enable flashing when timer completes
+  - Always-on-top functionality
 - **Persistent Storage**: All settings and timer state saved automatically
 
 ## Download
@@ -99,10 +106,11 @@ npm start
 ## Usage
 
 ### Getting Started
-1. **Launch the app** - A small green circle appears on your desktop
+1. **Launch the app** - A small green circle appears in the bottom-right corner (default)
 2. **Click the widget** - Opens the control panel
 3. **Start timing** - Timer automatically begins with default 5-minute duration
 4. **Watch the transition** - Widget smoothly changes from green to yellow to red
+5. **Timer completion** - Widget stays red when finished (optional flashing available)
 
 ### Timer Controls
 - **Pause/Resume**: Click the pause button or use the widget controls
@@ -112,13 +120,14 @@ npm start
 
 ### Customization
 1. Click the widget to open controls
-2. Click "Settings" button
+2. Click the "Settings" tab at the top
 3. Choose your preferred:
+   - Screen position (corners or center)
    - Widget shape (circle, square, star, etc.)
    - Size (50px - 200px)
    - Default timer duration
-   - Always on top behavior
-4. Click "Save" to apply changes
+   - Display options (time visibility, flashing, always on top)
+4. Click "Save Settings" to apply changes
 
 ## Building for Distribution
 
