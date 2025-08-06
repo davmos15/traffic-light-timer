@@ -7,7 +7,7 @@ A desktop timer widget application built with Electron that visually transitions
 ## Features
 
 ### 🎯 Main Timer Widget
-- **Compact Design**: Small, circular widget (100x100px default, customizable 50-200px)
+- **Compact Design**: Small, circular widget (100x100px default, customizable 20-200px)
 - **Color Transitions**: Smooth progression from green → yellow → red
 - **Smart Positioning**: Choose from preset positions (corners, center) or drag anywhere
 - **Adjustable Opacity**: Control widget transparency for subtle desktop integration
@@ -18,21 +18,29 @@ A desktop timer widget application built with Electron that visually transitions
 
 ### 🎨 Visual System
 - **Smooth Animations**: 60fps color interpolation using HSL color space
-- **Multiple Shapes**: Circle, Square, Star, Triangle, Diamond, Hexagon
+- **Multiple Shapes**: Circle, Square, Star, Triangle, Diamond, Hexagon, Horizontal Bar, Vertical Bar
+- **Loading Bar Options**: Fill up (0% to 100%) or Empty down (100% to 0%) modes for bar shapes
 - **Real-time Updates**: Millisecond-precision timer with live color feedback
+
+### 🔧 Widget Positioning & Behavior
+- **Position Maintenance**: Widget size can be changed while maintaining its screen position
+- **Precision Sizing**: Minimum widget size reduced to 20px for ultra-compact use
+- **Loading Bar Visualization**: Horizontal and vertical bar shapes with customizable fill direction
 
 ### 🎛️ Control Panel
 - **Tabbed Interface**: Timer controls and settings in one window
 - **Timer Controls**: Start, Stop, Pause, Resume, Restart
-- **Quick Add Time**: +1 min, +5 min, +15 min buttons  
+- **Quick Add Time**: +1 min, +5 min, +15 min buttons
+- **Quick Reduce Time**: -1 min, -5 min, -15 min buttons
 - **Custom Duration**: Set any time with minutes:seconds input
 - **Live Display**: Current time remaining and timer status
 - **Settings Tab**: All customization options easily accessible
 
 ### ⚙️ Settings & Customization
 - **Widget Position**: Choose from preset positions (Top Left, Top Right, Bottom Left, Bottom Right, Center)
-- **Shape Selection**: Choose from 6 different widget shapes
-- **Size Adjustment**: Scale from 50px to 200px with proportional text scaling
+- **Shape Selection**: Choose from 8 different widget shapes including loading bars
+- **Loading Bar Direction**: Choose fill-up or empty-down animation for bar shapes
+- **Size Adjustment**: Scale from 20px to 200px with proportional text scaling and position maintenance
 - **Opacity Control**: Adjust widget transparency from 20% to 100%
 - **Default Duration**: Set your preferred starting time
 - **Display Options**: 
@@ -120,11 +128,12 @@ npm start
 5. **Timer completion** - Widget stays red when finished (optional flashing available)
 
 ### Timer Controls
-- **Pause/Resume**: Click the pause button to pause, shows "Resume" when paused
+- **Pause/Resume**: Click the pause button to pause, shows "Resume" when paused (with improved synchronization)
 - **Add Time**: Use quick buttons (+1, +5, +15 min) or set custom duration
+- **Reduce Time**: Use quick buttons (-1, -5, -15 min) to decrease remaining time
 - **Restart**: Reset timer to default or last set duration
 - **Stop**: Stop timer and reset to beginning
-- **Smart Resume**: Timer resumes from exact paused position
+- **Smart Resume**: Timer resumes from exact paused position with fixed state synchronization
 
 ### Customization
 1. Click the widget to open controls
@@ -132,7 +141,7 @@ npm start
 3. Choose your preferred:
    - Screen position (corners or center)
    - Widget shape (circle, square, star, etc.)
-   - Size (50px - 200px) with auto-scaling text
+   - Size (20px - 200px) with auto-scaling text
    - Opacity (20% - 100%) for transparency control
    - Default timer duration
    - Display options (time visibility, flashing, always on top)

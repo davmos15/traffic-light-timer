@@ -85,6 +85,26 @@ function updateWidget(state) {
     widget.style.backgroundColor = color;
   }
   
+  // Handle loading bar progress
+  if (settings.shape === 'bar-horizontal' || settings.shape === 'bar-vertical') {
+    const barDirection = settings.barDirection || 'fill';
+    let progressPercent = state.progress * 100;
+    
+    if (barDirection === 'empty') {
+      progressPercent = 100 - progressPercent;
+    }
+    
+    if (settings.shape === 'bar-horizontal') {
+      widget.style.setProperty('--bar-progress', `${progressPercent}%`);
+      widget.style.width = '100%';
+      widget.style.height = '20%';
+    } else {
+      widget.style.setProperty('--bar-progress', `${progressPercent}%`);
+      widget.style.width = '20%';
+      widget.style.height = '100%';
+    }
+  }
+  
   if (settings.showTimerDisplay && (state.isRunning || state.isPaused || state.timeRemaining < state.duration)) {
     timerDisplay.textContent = timer.formatTime();
     timerDisplay.style.display = 'block';

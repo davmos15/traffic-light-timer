@@ -302,8 +302,36 @@ h3 {
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 }
 
+.shape-preview.bar-horizontal {
+    width: 40px;
+    height: 10px;
+    border-radius: 0;
+}
+
+.shape-preview.bar-vertical {
+    width: 10px;
+    height: 40px;
+    border-radius: 0;
+}
+
 .shape-option span:last-child {
     font-size: 12px;
+    color: #666;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.radio-option span {
+    font-size: 14px;
     color: #666;
 }
 

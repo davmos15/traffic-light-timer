@@ -209,23 +209,17 @@ ipcMain.on('save-settings', (event, newSettings) => {
     widgetWindow.webContents.send('settings-updated', settings);
     
     if (settings.widgetSize !== widgetWindow.getBounds().width) {
-      // Get current bounds before resizing
+      // Get current position before resizing
       const currentBounds = widgetWindow.getBounds();
-      const oldSize = currentBounds.width;
       const newSize = settings.widgetSize;
       
-      // Calculate position adjustment to keep widget centered
-      const sizeDiff = (oldSize - newSize) / 2;
-      const newX = currentBounds.x + sizeDiff;
-      const newY = currentBounds.y + sizeDiff;
-      
-      // Set new size
-      widgetWindow.setSize(newSize, newSize);
-      
-      // Only adjust position if not changing screen position setting
-      if (!newSettings.screenPosition || newSettings.screenPosition === currentSettings.screenPosition) {
-        widgetWindow.setPosition(Math.round(newX), Math.round(newY));
-      }
+      // Set new size while maintaining current position
+      widgetWindow.setBounds({
+        x: currentBounds.x,
+        y: currentBounds.y,
+        width: newSize,
+        height: newSize
+      });
     }
     
     // Update position if screen position changed

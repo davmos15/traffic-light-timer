@@ -97,6 +97,7 @@ class Timer {
       this.timeRemaining += milliseconds;
     }
     this._notifyUpdate();
+    this._notifyStateChange();
   }
 
   setTime(milliseconds) {
@@ -106,6 +107,7 @@ class Timer {
       this.startTime = Date.now();
     }
     this._notifyUpdate();
+    this._notifyStateChange();
   }
 
   getProgress() {
