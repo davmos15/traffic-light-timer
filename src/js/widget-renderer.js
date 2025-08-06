@@ -33,6 +33,10 @@ async function init() {
 function applySettings() {
   widget.className = `widget ${settings.shape}`;
   
+  // Reset any inline styles that might have been set
+  widget.style.width = '';
+  widget.style.height = '';
+  
   // Calculate font size scale based on widget size (100px is the default)
   const sizeScale = settings.widgetSize / 100;
   document.documentElement.style.setProperty('--size-scale', sizeScale);
@@ -94,15 +98,7 @@ function updateWidget(state) {
       progressPercent = 100 - progressPercent;
     }
     
-    if (settings.shape === 'bar-horizontal') {
-      widget.style.setProperty('--bar-progress', `${progressPercent}%`);
-      widget.style.width = '100%';
-      widget.style.height = '20%';
-    } else {
-      widget.style.setProperty('--bar-progress', `${progressPercent}%`);
-      widget.style.width = '20%';
-      widget.style.height = '100%';
-    }
+    widget.style.setProperty('--bar-progress', `${progressPercent}%`);
   }
   
   if (settings.showTimerDisplay && (state.isRunning || state.isPaused || state.timeRemaining < state.duration)) {

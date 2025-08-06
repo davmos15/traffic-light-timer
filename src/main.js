@@ -81,9 +81,21 @@ function createWidgetWindow() {
   
   const position = getWidgetPosition();
   
+  // Calculate window dimensions based on shape
+  let width = settings.widgetSize;
+  let height = settings.widgetSize;
+  
+  if (settings.shape === 'bar-horizontal') {
+    width = settings.widgetSize * 4;
+    height = Math.max(20, settings.widgetSize / 5);
+  } else if (settings.shape === 'bar-vertical') {
+    width = Math.max(20, settings.widgetSize / 5);
+    height = settings.widgetSize * 4;
+  }
+  
   widgetWindow = new BrowserWindow({
-    width: settings.widgetSize,
-    height: settings.widgetSize,
+    width: width,
+    height: height,
     x: position.x,
     y: position.y,
     frame: false,
@@ -208,17 +220,27 @@ ipcMain.on('save-settings', (event, newSettings) => {
   if (widgetWindow && !widgetWindow.isDestroyed()) {
     widgetWindow.webContents.send('settings-updated', settings);
     
-    if (settings.widgetSize !== widgetWindow.getBounds().width) {
-      // Get current position before resizing
-      const currentBounds = widgetWindow.getBounds();
-      const newSize = settings.widgetSize;
-      
-      // Set new size while maintaining current position
+    // Handle window sizing based on shape
+    const currentBounds = widgetWindow.getBounds();
+    let newWidth = settings.widgetSize;
+    let newHeight = settings.widgetSize;
+    
+    // Adjust dimensions for bar shapes
+    if (settings.shape === 'bar-horizontal') {
+      newWidth = settings.widgetSize * 4;  // Make horizontal bar wider
+      newHeight = Math.max(20, settings.widgetSize / 5);  // Thin height
+    } else if (settings.shape === 'bar-vertical') {
+      newWidth = Math.max(20, settings.widgetSize / 5);  // Thin width
+      newHeight = settings.widgetSize * 4;  // Make vertical bar taller
+    }
+    
+    // Only update if dimensions changed
+    if (currentBounds.width !== newWidth || currentBounds.height !== newHeight) {
       widgetWindow.setBounds({
         x: currentBounds.x,
         y: currentBounds.y,
-        width: newSize,
-        height: newSize
+        width: newWidth,
+        height: newHeight
       });
     }
     

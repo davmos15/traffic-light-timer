@@ -253,9 +253,6 @@ saveSettingsBtn.addEventListener('click', () => {
     };
     
     ipcRenderer.send('save-settings', newSettings);
-    
-    // Switch back to timer tab
-    controlsTab.click();
 });
 
 // IPC events
