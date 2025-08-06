@@ -70,14 +70,23 @@ function interpolateColor(progress) {
 
 function updateWidget(state) {
   const color = interpolateColor(state.progress);
+  const isBar = settings.shape === 'bar-horizontal' || settings.shape === 'bar-vertical';
   
   if (state.isCompleted) {
-    widget.style.backgroundColor = 'hsl(0, 100%, 50%)';
+    if (isBar) {
+      widget.style.setProperty('--bar-color', 'hsl(0, 100%, 50%)');
+    } else {
+      widget.style.backgroundColor = 'hsl(0, 100%, 50%)';
+    }
     
     if (settings.flashOnComplete && !flashInterval) {
       let isRed = true;
       flashInterval = setInterval(() => {
-        widget.style.backgroundColor = isRed ? 'hsl(0, 100%, 50%)' : 'hsl(0, 100%, 30%)';
+        if (isBar) {
+          widget.style.setProperty('--bar-color', isRed ? 'hsl(0, 100%, 50%)' : 'hsl(0, 100%, 30%)');
+        } else {
+          widget.style.backgroundColor = isRed ? 'hsl(0, 100%, 50%)' : 'hsl(0, 100%, 30%)';
+        }
         isRed = !isRed;
       }, 500);
     }
@@ -86,11 +95,16 @@ function updateWidget(state) {
       clearInterval(flashInterval);
       flashInterval = null;
     }
-    widget.style.backgroundColor = color;
+    
+    if (isBar) {
+      widget.style.setProperty('--bar-color', color);
+    } else {
+      widget.style.backgroundColor = color;
+    }
   }
   
   // Handle loading bar progress
-  if (settings.shape === 'bar-horizontal' || settings.shape === 'bar-vertical') {
+  if (isBar) {
     const barDirection = settings.barDirection || 'fill';
     let progressPercent = state.progress * 100;
     

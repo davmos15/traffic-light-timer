@@ -44,8 +44,19 @@ function saveSettings() {
 
 function getWidgetPosition() {
   const { width: screenWidth, height: screenHeight } = require('electron').screen.getPrimaryDisplay().workAreaSize;
-  const widgetSize = settings.widgetSize;
   const margin = 20;
+  
+  // Calculate widget dimensions based on shape
+  let widgetWidth = settings.widgetSize;
+  let widgetHeight = settings.widgetSize;
+  
+  if (settings.shape === 'bar-horizontal') {
+    widgetWidth = settings.widgetSize * 4;
+    widgetHeight = Math.max(20, settings.widgetSize / 5);
+  } else if (settings.shape === 'bar-vertical') {
+    widgetWidth = Math.max(20, settings.widgetSize / 5);
+    widgetHeight = settings.widgetSize * 4;
+  }
   
   let x, y;
   
@@ -55,21 +66,21 @@ function getWidgetPosition() {
       y = margin;
       break;
     case 'top-right':
-      x = screenWidth - widgetSize - margin;
+      x = screenWidth - widgetWidth - margin;
       y = margin;
       break;
     case 'bottom-left':
       x = margin;
-      y = screenHeight - widgetSize - margin;
+      y = screenHeight - widgetHeight - margin;
       break;
     case 'bottom-right':
     default:
-      x = screenWidth - widgetSize - margin;
-      y = screenHeight - widgetSize - margin;
+      x = screenWidth - widgetWidth - margin;
+      y = screenHeight - widgetHeight - margin;
       break;
     case 'center':
-      x = Math.floor((screenWidth - widgetSize) / 2);
-      y = Math.floor((screenHeight - widgetSize) / 2);
+      x = Math.floor((screenWidth - widgetWidth) / 2);
+      y = Math.floor((screenHeight - widgetHeight) / 2);
       break;
   }
   
