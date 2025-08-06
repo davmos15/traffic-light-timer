@@ -10,7 +10,6 @@ const settingsPath = path.join(userDataPath, 'settings.json');
 const timerStatePath = path.join(userDataPath, 'timerState.json');
 
 let settings = {
-  shape: 'circle',
   defaultDuration: 300000,
   widgetSize: 100,
   alwaysOnTop: true,
@@ -46,17 +45,8 @@ function getWidgetPosition() {
   const { width: screenWidth, height: screenHeight } = require('electron').screen.getPrimaryDisplay().workAreaSize;
   const margin = 20;
   
-  // Calculate widget dimensions based on shape
-  let widgetWidth = settings.widgetSize;
-  let widgetHeight = settings.widgetSize;
-  
-  if (settings.shape === 'bar-horizontal') {
-    widgetWidth = settings.widgetSize * 4;
-    widgetHeight = Math.max(20, settings.widgetSize / 5);
-  } else if (settings.shape === 'bar-vertical') {
-    widgetWidth = Math.max(20, settings.widgetSize / 5);
-    widgetHeight = settings.widgetSize * 4;
-  }
+  const widgetWidth = settings.widgetSize;
+  const widgetHeight = settings.widgetSize;
   
   let x, y;
   
@@ -92,21 +82,9 @@ function createWidgetWindow() {
   
   const position = getWidgetPosition();
   
-  // Calculate window dimensions based on shape
-  let width = settings.widgetSize;
-  let height = settings.widgetSize;
-  
-  if (settings.shape === 'bar-horizontal') {
-    width = settings.widgetSize * 4;
-    height = Math.max(20, settings.widgetSize / 5);
-  } else if (settings.shape === 'bar-vertical') {
-    width = Math.max(20, settings.widgetSize / 5);
-    height = settings.widgetSize * 4;
-  }
-  
   widgetWindow = new BrowserWindow({
-    width: width,
-    height: height,
+    width: settings.widgetSize,
+    height: settings.widgetSize,
     x: position.x,
     y: position.y,
     frame: false,
@@ -231,27 +209,14 @@ ipcMain.on('save-settings', (event, newSettings) => {
   if (widgetWindow && !widgetWindow.isDestroyed()) {
     widgetWindow.webContents.send('settings-updated', settings);
     
-    // Handle window sizing based on shape
-    const currentBounds = widgetWindow.getBounds();
-    let newWidth = settings.widgetSize;
-    let newHeight = settings.widgetSize;
-    
-    // Adjust dimensions for bar shapes
-    if (settings.shape === 'bar-horizontal') {
-      newWidth = settings.widgetSize * 4;  // Make horizontal bar wider
-      newHeight = Math.max(20, settings.widgetSize / 5);  // Thin height
-    } else if (settings.shape === 'bar-vertical') {
-      newWidth = Math.max(20, settings.widgetSize / 5);  // Thin width
-      newHeight = settings.widgetSize * 4;  // Make vertical bar taller
-    }
-    
-    // Only update if dimensions changed
-    if (currentBounds.width !== newWidth || currentBounds.height !== newHeight) {
+    // Handle window sizing
+    if (settings.widgetSize !== widgetWindow.getBounds().width) {
+      const currentBounds = widgetWindow.getBounds();
       widgetWindow.setBounds({
         x: currentBounds.x,
         y: currentBounds.y,
-        width: newWidth,
-        height: newHeight
+        width: settings.widgetSize,
+        height: settings.widgetSize
       });
     }
     

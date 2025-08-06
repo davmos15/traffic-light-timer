@@ -18,14 +18,12 @@ A desktop timer widget application built with Electron that visually transitions
 
 ### 🎨 Visual System
 - **Smooth Animations**: 60fps color interpolation using HSL color space
-- **Multiple Shapes**: Circle, Square, Star, Triangle, Diamond, Hexagon, Horizontal Bar, Vertical Bar
-- **Loading Bar Options**: Fill up (0% to 100%) or Empty down (100% to 0%) modes for bar shapes
+- **Clean Design**: Simple circular widget with smooth color transitions
 - **Real-time Updates**: Millisecond-precision timer with live color feedback
 
 ### 🔧 Widget Positioning & Behavior
 - **Position Maintenance**: Widget size can be changed while maintaining its screen position
 - **Precision Sizing**: Minimum widget size reduced to 20px for ultra-compact use
-- **Loading Bar Visualization**: Horizontal and vertical bar shapes with customizable fill direction
 
 ### 🎛️ Control Panel
 - **Tabbed Interface**: Timer controls and settings in one window
@@ -38,8 +36,6 @@ A desktop timer widget application built with Electron that visually transitions
 
 ### ⚙️ Settings & Customization
 - **Widget Position**: Choose from preset positions (Top Left, Top Right, Bottom Left, Bottom Right, Center)
-- **Shape Selection**: Choose from 8 different widget shapes including loading bars
-- **Loading Bar Direction**: Choose fill-up or empty-down animation for bar shapes
 - **Size Adjustment**: Scale from 20px to 200px with proportional text scaling and position maintenance
 - **Opacity Control**: Adjust widget transparency from 20% to 100%
 - **Default Duration**: Set your preferred starting time
@@ -140,7 +136,6 @@ npm start
 2. Click the "Settings" tab at the top
 3. Choose your preferred:
    - Screen position (corners or center)
-   - Widget shape (circle, square, star, etc.)
    - Size (20px - 200px) with auto-scaling text
    - Opacity (20% - 100%) for transparency control
    - Default timer duration

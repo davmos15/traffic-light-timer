@@ -31,7 +31,6 @@ const flashOnCompleteCheckbox = document.getElementById('flash-on-complete');
 const showPopupOnCompleteCheckbox = document.getElementById('show-popup-on-complete');
 const popupMessageInput = document.getElementById('popup-message');
 const popupMessageGroup = document.getElementById('popup-message-group');
-const barDirectionGroup = document.getElementById('bar-direction-group');
 const saveSettingsBtn = document.getElementById('save-settings-btn');
 
 let currentState = {
@@ -149,19 +148,6 @@ async function loadSettings() {
     // Set screen position
     screenPositionSelect.value = currentSettings.screenPosition || 'bottom-right';
     
-    // Set shape
-    document.querySelector(`input[name="shape"][value="${currentSettings.shape}"]`).checked = true;
-    
-    // Show/hide bar direction settings
-    if (currentSettings.shape === 'bar-horizontal' || currentSettings.shape === 'bar-vertical') {
-        barDirectionGroup.style.display = 'block';
-    } else {
-        barDirectionGroup.style.display = 'none';
-    }
-    
-    // Set bar direction
-    const barDirection = currentSettings.barDirection || 'fill';
-    document.querySelector(`input[name="bar-direction"][value="${barDirection}"]`).checked = true;
     
     // Set default duration
     const totalSeconds = Math.floor(currentSettings.defaultDuration / 1000);
@@ -212,19 +198,7 @@ showPopupOnCompleteCheckbox.addEventListener('change', (e) => {
     popupMessageGroup.style.display = e.target.checked ? 'block' : 'none';
 });
 
-// Shape change event
-document.querySelectorAll('input[name="shape"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        if (e.target.value === 'bar-horizontal' || e.target.value === 'bar-vertical') {
-            barDirectionGroup.style.display = 'block';
-        } else {
-            barDirectionGroup.style.display = 'none';
-        }
-    });
-});
-
 saveSettingsBtn.addEventListener('click', () => {
-    const shape = document.querySelector('input[name="shape"]:checked').value;
     const screenPosition = screenPositionSelect.value;
     const minutes = parseInt(defaultMinutesInput.value) || 0;
     const seconds = parseInt(defaultSecondsInput.value) || 0;
@@ -236,10 +210,8 @@ saveSettingsBtn.addEventListener('click', () => {
     const flashOnComplete = flashOnCompleteCheckbox.checked;
     const showPopupOnComplete = showPopupOnCompleteCheckbox.checked;
     const popupMessage = popupMessageInput.value || 'Timer completed!';
-    const barDirection = document.querySelector('input[name="bar-direction"]:checked')?.value || 'fill';
     
     const newSettings = {
-        shape,
         screenPosition,
         defaultDuration,
         widgetSize,
@@ -248,8 +220,7 @@ saveSettingsBtn.addEventListener('click', () => {
         showTimerDisplay,
         flashOnComplete,
         showPopupOnComplete,
-        popupMessage,
-        barDirection
+        popupMessage
     };
     
     ipcRenderer.send('save-settings', newSettings);

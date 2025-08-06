@@ -31,11 +31,7 @@ async function init() {
 }
 
 function applySettings() {
-  widget.className = `widget ${settings.shape}`;
-  
-  // Reset any inline styles that might have been set
-  widget.style.width = '';
-  widget.style.height = '';
+  widget.className = 'widget circle';
   
   // Calculate font size scale based on widget size (100px is the default)
   const sizeScale = settings.widgetSize / 100;
@@ -70,23 +66,14 @@ function interpolateColor(progress) {
 
 function updateWidget(state) {
   const color = interpolateColor(state.progress);
-  const isBar = settings.shape === 'bar-horizontal' || settings.shape === 'bar-vertical';
   
   if (state.isCompleted) {
-    if (isBar) {
-      widget.style.setProperty('--bar-color', 'hsl(0, 100%, 50%)');
-    } else {
-      widget.style.backgroundColor = 'hsl(0, 100%, 50%)';
-    }
+    widget.style.backgroundColor = 'hsl(0, 100%, 50%)';
     
     if (settings.flashOnComplete && !flashInterval) {
       let isRed = true;
       flashInterval = setInterval(() => {
-        if (isBar) {
-          widget.style.setProperty('--bar-color', isRed ? 'hsl(0, 100%, 50%)' : 'hsl(0, 100%, 30%)');
-        } else {
-          widget.style.backgroundColor = isRed ? 'hsl(0, 100%, 50%)' : 'hsl(0, 100%, 30%)';
-        }
+        widget.style.backgroundColor = isRed ? 'hsl(0, 100%, 50%)' : 'hsl(0, 100%, 30%)';
         isRed = !isRed;
       }, 500);
     }
@@ -95,24 +82,7 @@ function updateWidget(state) {
       clearInterval(flashInterval);
       flashInterval = null;
     }
-    
-    if (isBar) {
-      widget.style.setProperty('--bar-color', color);
-    } else {
-      widget.style.backgroundColor = color;
-    }
-  }
-  
-  // Handle loading bar progress
-  if (isBar) {
-    const barDirection = settings.barDirection || 'fill';
-    let progressPercent = state.progress * 100;
-    
-    if (barDirection === 'empty') {
-      progressPercent = 100 - progressPercent;
-    }
-    
-    widget.style.setProperty('--bar-progress', `${progressPercent}%`);
+    widget.style.backgroundColor = color;
   }
   
   if (settings.showTimerDisplay && (state.isRunning || state.isPaused || state.timeRemaining < state.duration)) {
