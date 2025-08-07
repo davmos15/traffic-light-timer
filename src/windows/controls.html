@@ -54,8 +54,8 @@
         </div>
         
         <div id="settings-panel" class="panel">
-            <div class="setting-group">
-                <h3>Position</h3>
+            <div class="setting-row">
+                <label>Position</label>
                 <select id="screen-position">
                     <option value="top-left">Top Left</option>
                     <option value="top-right">Top Right</option>
@@ -65,17 +65,17 @@
                 </select>
             </div>
             
-            <div class="setting-group">
-                <h3>Size</h3>
-                <div class="size-control">
+            <div class="setting-row">
+                <label>Size</label>
+                <div class="slider-control">
                     <input type="range" id="size-slider" min="20" max="200" value="100" step="5">
                     <span id="size-display">100px</span>
                 </div>
             </div>
             
-            <div class="setting-group">
-                <h3>Opacity</h3>
-                <div class="opacity-control">
+            <div class="setting-row">
+                <label>Opacity</label>
+                <div class="slider-control">
                     <input type="range" id="opacity-slider" min="20" max="100" value="100" step="5">
                     <span id="opacity-display">100%</span>
                 </div>
@@ -92,12 +92,12 @@
                     <span>Show time remaining</span>
                 </label>
                 <label class="checkbox-option">
-                    <input type="checkbox" id="flash-on-complete">
-                    <span>Flash when timer completes</span>
-                </label>
-                <label class="checkbox-option">
                     <input type="checkbox" id="show-popup-on-complete">
-                    <span>Show popup message when timer completes</span>
+                    <span>Pop-up on finish</span>
+                </label>
+                <label class="checkbox-option checkbox-dependent" id="flash-option">
+                    <input type="checkbox" id="flash-on-complete" disabled>
+                    <span>Flash when timer completes</span>
                 </label>
             </div>
             

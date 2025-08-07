@@ -27,6 +27,7 @@ const alwaysOnTopCheckbox = document.getElementById('always-on-top');
 const showTimerDisplayCheckbox = document.getElementById('show-timer-display');
 const flashOnCompleteCheckbox = document.getElementById('flash-on-complete');
 const showPopupOnCompleteCheckbox = document.getElementById('show-popup-on-complete');
+const flashOption = document.getElementById('flash-option');
 const popupMessageInput = document.getElementById('popup-message');
 const popupMessageGroup = document.getElementById('popup-message-group');
 const saveSettingsBtn = document.getElementById('save-settings-btn');
@@ -163,6 +164,9 @@ async function loadSettings() {
     // Set popup message
     popupMessageInput.value = currentSettings.popupMessage || 'Timer completed!';
     popupMessageGroup.style.display = currentSettings.showPopupOnComplete ? 'block' : 'none';
+    
+    // Update flash setting dependency
+    updateFlashDependency();
 }
 
 // Settings events
@@ -174,8 +178,20 @@ opacitySlider.addEventListener('input', (e) => {
     opacityDisplay.textContent = `${e.target.value}%`;
 });
 
+function updateFlashDependency() {
+    if (showPopupOnCompleteCheckbox.checked) {
+        flashOption.classList.add('enabled');
+        flashOnCompleteCheckbox.disabled = false;
+    } else {
+        flashOption.classList.remove('enabled');
+        flashOnCompleteCheckbox.disabled = true;
+        flashOnCompleteCheckbox.checked = false;
+    }
+}
+
 showPopupOnCompleteCheckbox.addEventListener('change', (e) => {
     popupMessageGroup.style.display = e.target.checked ? 'block' : 'none';
+    updateFlashDependency();
 });
 
 saveSettingsBtn.addEventListener('click', () => {
