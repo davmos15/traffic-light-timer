@@ -24,10 +24,6 @@ async function init() {
   });
   
   updateWidget(timer.getState());
-  
-  if (!savedState || (!savedState.isRunning && !savedState.isPaused)) {
-    timer.start(settings.defaultDuration);
-  }
 }
 
 function applySettings() {

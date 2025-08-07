@@ -13,8 +13,6 @@
         </div>
         
         <div id="controls-panel" class="panel active">
-            <h2>Timer Controls</h2>
-        
         <div class="timer-display">
             <div id="time-display">5:00</div>
             <div id="status-display">Running</div>
@@ -56,10 +54,8 @@
         </div>
         
         <div id="settings-panel" class="panel">
-            <h2>Settings</h2>
-            
             <div class="setting-group">
-                <h3>Widget Position</h3>
+                <h3>Position</h3>
                 <select id="screen-position">
                     <option value="top-left">Top Left</option>
                     <option value="top-right">Top Right</option>
@@ -69,19 +65,8 @@
                 </select>
             </div>
             
-            
             <div class="setting-group">
-                <h3>Default Timer Duration</h3>
-                <div class="duration-input">
-                    <input type="number" id="default-minutes" min="0" max="999" value="5">
-                    <span>minutes</span>
-                    <input type="number" id="default-seconds" min="0" max="59" value="0">
-                    <span>seconds</span>
-                </div>
-            </div>
-            
-            <div class="setting-group">
-                <h3>Widget Size</h3>
+                <h3>Size</h3>
                 <div class="size-control">
                     <input type="range" id="size-slider" min="20" max="200" value="100" step="5">
                     <span id="size-display">100px</span>
@@ -89,7 +74,7 @@
             </div>
             
             <div class="setting-group">
-                <h3>Widget Opacity</h3>
+                <h3>Opacity</h3>
                 <div class="opacity-control">
                     <input type="range" id="opacity-slider" min="20" max="100" value="100" step="5">
                     <span id="opacity-display">100%</span>

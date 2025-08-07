@@ -19,8 +19,6 @@ const setTimeBtn = document.getElementById('set-time-btn');
 
 // Settings controls
 const screenPositionSelect = document.getElementById('screen-position');
-const defaultMinutesInput = document.getElementById('default-minutes');
-const defaultSecondsInput = document.getElementById('default-seconds');
 const sizeSlider = document.getElementById('size-slider');
 const sizeDisplay = document.getElementById('size-display');
 const opacitySlider = document.getElementById('opacity-slider');
@@ -148,14 +146,6 @@ async function loadSettings() {
     // Set screen position
     screenPositionSelect.value = currentSettings.screenPosition || 'bottom-right';
     
-    
-    // Set default duration
-    const totalSeconds = Math.floor(currentSettings.defaultDuration / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    defaultMinutesInput.value = minutes;
-    defaultSecondsInput.value = seconds;
-    
     // Set size
     sizeSlider.value = currentSettings.widgetSize;
     sizeDisplay.textContent = `${currentSettings.widgetSize}px`;
@@ -184,25 +174,12 @@ opacitySlider.addEventListener('input', (e) => {
     opacityDisplay.textContent = `${e.target.value}%`;
 });
 
-defaultMinutesInput.addEventListener('input', (e) => {
-    if (e.target.value > 999) e.target.value = 999;
-    if (e.target.value < 0) e.target.value = 0;
-});
-
-defaultSecondsInput.addEventListener('input', (e) => {
-    if (e.target.value > 59) e.target.value = 59;
-    if (e.target.value < 0) e.target.value = 0;
-});
-
 showPopupOnCompleteCheckbox.addEventListener('change', (e) => {
     popupMessageGroup.style.display = e.target.checked ? 'block' : 'none';
 });
 
 saveSettingsBtn.addEventListener('click', () => {
     const screenPosition = screenPositionSelect.value;
-    const minutes = parseInt(defaultMinutesInput.value) || 0;
-    const seconds = parseInt(defaultSecondsInput.value) || 0;
-    const defaultDuration = (minutes * 60 + seconds) * 1000;
     const widgetSize = parseInt(sizeSlider.value);
     const opacity = parseInt(opacitySlider.value);
     const alwaysOnTop = alwaysOnTopCheckbox.checked;
@@ -213,7 +190,6 @@ saveSettingsBtn.addEventListener('click', () => {
     
     const newSettings = {
         screenPosition,
-        defaultDuration,
         widgetSize,
         opacity,
         alwaysOnTop,

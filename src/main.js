@@ -266,17 +266,99 @@ ipcMain.on('timer-command', (event, command, data) => {
 
 ipcMain.on('show-completion-popup', () => {
   if (settings.showPopupOnComplete) {
-    // Get the focused window or widget window as parent
-    const parentWindow = BrowserWindow.getFocusedWindow() || widgetWindow;
+    // Create a fullscreen overlay window for maximum visibility
+    const { width: screenWidth, height: screenHeight } = require('electron').screen.getPrimaryDisplay().workAreaSize;
     
-    dialog.showMessageBox(parentWindow, {
-      type: 'info',
-      title: 'Timer Complete',
-      message: settings.popupMessage,
-      buttons: ['OK'],
-      defaultId: 0,
-      noLink: true
+    const popupWindow = new BrowserWindow({
+      width: screenWidth,
+      height: screenHeight,
+      x: 0,
+      y: 0,
+      frame: false,
+      transparent: true,
+      alwaysOnTop: true,
+      skipTaskbar: true,
+      resizable: false,
+      movable: false,
+      focusable: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      }
     });
+    
+    // Create HTML content for the popup
+    const popupHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease-in;
+            cursor: pointer;
+            user-select: none;
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+          }
+          .message-container {
+            background-color: #ff4444;
+            color: white;
+            padding: 60px 80px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+            animation: pulse 1s ease-in-out infinite;
+          }
+          .message {
+            font-size: 48px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            margin-bottom: 30px;
+          }
+          .instruction {
+            font-size: 24px;
+            opacity: 0.9;
+            font-family: Arial, sans-serif;
+          }
+        </style>
+      </head>
+      <body onclick="window.close()">
+        <div class="message-container">
+          <div class="message">${settings.popupMessage}</div>
+          <div class="instruction">Click anywhere to dismiss</div>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    popupWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(popupHTML)}`);
+    
+    // Focus the window and bring it to front
+    popupWindow.show();
+    popupWindow.focus();
+    popupWindow.setAlwaysOnTop(true, 'screen-saver');
+    
+    // Auto-close after 10 seconds if not clicked
+    setTimeout(() => {
+      if (!popupWindow.isDestroyed()) {
+        popupWindow.close();
+      }
+    }, 10000);
   }
 });
 
