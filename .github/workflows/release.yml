@@ -57,6 +57,7 @@ jobs:
         with:
           draft: false
           prerelease: false
+          body_path: RELEASE_NOTES.md
           files: |
             dist-artifacts/dist-windows-latest/*.exe
             dist-artifacts/dist-windows-latest/*.msi

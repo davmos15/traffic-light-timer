@@ -8,6 +8,12 @@ let settings = null;
 let isClicking = false;
 let flashInterval = null;
 
+// Break-reminder state
+let workSecondsSinceBreak = 0;
+let isOnBreak = false;
+let resumeAfterBreak = false;
+let activeTask = null;
+
 async function init() {
   settings = await ipcRenderer.invoke('get-settings');
   applySettings();
@@ -61,11 +67,28 @@ function interpolateColor(progress) {
 }
 
 function updateWidget(state) {
+  // Break mode takes over the widget's appearance
+  if (isOnBreak) {
+    if (flashInterval) {
+      clearInterval(flashInterval);
+      flashInterval = null;
+    }
+    widget.style.backgroundColor = 'hsl(212, 75%, 52%)';
+    if (settings.showTimerDisplay) {
+      timerDisplay.textContent = 'Break';
+      timerDisplay.style.display = 'block';
+    } else {
+      timerDisplay.style.display = 'none';
+    }
+    ipcRenderer.send('timer-update', state);
+    return;
+  }
+
   const color = interpolateColor(state.progress);
-  
+
   if (state.isCompleted) {
     widget.style.backgroundColor = 'hsl(0, 100%, 50%)';
-    
+
     if (settings.flashOnComplete && !flashInterval) {
       let isRed = true;
       flashInterval = setInterval(() => {
@@ -80,15 +103,43 @@ function updateWidget(state) {
     }
     widget.style.backgroundColor = color;
   }
-  
+
   if (settings.showTimerDisplay && (state.isRunning || state.isPaused || state.timeRemaining < state.duration)) {
     timerDisplay.textContent = timer.formatTime();
     timerDisplay.style.display = 'block';
   } else {
     timerDisplay.style.display = 'none';
   }
-  
+
   ipcRenderer.send('timer-update', state);
+}
+
+// ---- Break reminders ----
+// Count real seconds of active work; trigger a break every `breakInterval` minutes.
+setInterval(() => {
+  if (!settings || settings.breaksEnabled === false || isOnBreak) return;
+  if (timer.isRunning && !timer.isPaused) {
+    workSecondsSinceBreak++;
+    const intervalSeconds = (settings.breakInterval || 20) * 60;
+    if (workSecondsSinceBreak >= intervalSeconds) {
+      triggerBreak();
+    }
+  }
+}, 1000);
+
+function triggerBreak() {
+  workSecondsSinceBreak = 0;
+  isOnBreak = true;
+  // Pause the work timer while on break; remember whether to resume it after
+  resumeAfterBreak = timer.isRunning && !timer.isPaused;
+  if (resumeAfterBreak) {
+    timer.pause();
+  }
+  updateWidget(timer.getState());
+  ipcRenderer.send('show-break-popup', {
+    duration: settings.breakDuration || 5,
+    message: settings.breakMessage
+  });
 }
 
 function handleComplete() {
@@ -117,22 +168,17 @@ widget.addEventListener('mouseup', (e) => {
   }
 });
 
-// Right-click to open settings
+// Right-click also opens the controls window
 widget.addEventListener('contextmenu', (e) => {
-  console.log('Widget right-clicked!');
   e.preventDefault();
-  ipcRenderer.send('open-settings');
+  ipcRenderer.send('open-controls');
 });
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'o') {
+  if (e.ctrlKey && (e.key === 'o' || e.key === 's')) {
     e.preventDefault();
     ipcRenderer.send('open-controls');
-  }
-  if (e.ctrlKey && e.key === 's') {
-    e.preventDefault();
-    ipcRenderer.send('open-settings');
   }
   if (e.key === 'r') {
     e.preventDefault();
@@ -185,6 +231,22 @@ ipcRenderer.on('request-timer-state', () => {
   // Send current timer state
   const state = timer.getState();
   ipcRenderer.send('timer-update', state);
+});
+
+ipcRenderer.on('break-finished', () => {
+  isOnBreak = false;
+  if (resumeAfterBreak) {
+    timer.resume();
+  }
+  resumeAfterBreak = false;
+  updateWidget(timer.getState());
+});
+
+ipcRenderer.on('set-active-task', (event, task) => {
+  activeTask = task;
+  // Reset the break counter when a new task starts
+  workSecondsSinceBreak = 0;
+  widget.title = task && task.name ? task.name : '';
 });
 
 init();
