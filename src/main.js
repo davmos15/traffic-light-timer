@@ -4,10 +4,12 @@ const fs = require('fs');
 
 let widgetWindow;
 let controlsWindow;
+let breakWindow;
 
 const userDataPath = app.getPath('userData');
 const settingsPath = path.join(userDataPath, 'settings.json');
 const timerStatePath = path.join(userDataPath, 'timerState.json');
+const schedulePath = path.join(userDataPath, 'schedule.json');
 
 let settings = {
   defaultDuration: 300000,
@@ -19,7 +21,17 @@ let settings = {
   screenPosition: 'bottom-right',
   showPopupOnComplete: false,
   popupMessage: 'Timer completed!',
-  opacity: 100
+  opacity: 100,
+  // Day-planner defaults
+  defaultStartTime: '09:00',
+  defaultEndTime: '17:00',
+  defaultLunchTime: '12:30',
+  defaultLunchDuration: 60,
+  // Break reminder defaults
+  breaksEnabled: true,
+  breakInterval: 20,
+  breakDuration: 5,
+  breakMessage: 'Time for a break! Stand up, stretch, and rest your eyes.'
 };
 
 function loadSettings() {
@@ -38,6 +50,48 @@ function saveSettings() {
     fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
   } catch (error) {
     console.error('Error saving settings:', error);
+  }
+}
+
+function todayKey() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function freshSchedule() {
+  return {
+    date: todayKey(),
+    startTime: settings.defaultStartTime,
+    endTime: settings.defaultEndTime,
+    lunchTime: settings.defaultLunchTime,
+    lunchDuration: settings.defaultLunchDuration,
+    blocks: []
+  };
+}
+
+function loadSchedule() {
+  try {
+    if (fs.existsSync(schedulePath)) {
+      const data = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
+      // Roll over to a new (empty) day if the saved schedule is from a previous day
+      if (data && data.date === todayKey()) {
+        return { ...freshSchedule(), ...data };
+      }
+    }
+  } catch (error) {
+    console.error('Error loading schedule:', error);
+  }
+  return freshSchedule();
+}
+
+function saveSchedule(schedule) {
+  try {
+    fs.writeFileSync(schedulePath, JSON.stringify(schedule, null, 2));
+  } catch (error) {
+    console.error('Error saving schedule:', error);
   }
 }
 
@@ -122,10 +176,12 @@ function createControlsWindow() {
   }
 
   controlsWindow = new BrowserWindow({
-    width: 400,
-    height: 600,
+    width: 460,
+    height: 720,
+    minWidth: 400,
+    minHeight: 560,
     frame: true,
-    resizable: false,
+    resizable: true,
     alwaysOnTop: settings.alwaysOnTop,
     webPreferences: {
       nodeIntegration: true,
@@ -368,3 +424,85 @@ ipcMain.on('request-timer-state', (event) => {
     widgetWindow.webContents.send('request-timer-state');
   }
 });
+
+// ---- Day schedule persistence ----
+ipcMain.handle('get-schedule', () => {
+  return loadSchedule();
+});
+
+ipcMain.on('save-schedule', (event, schedule) => {
+  saveSchedule(schedule);
+  // Keep all windows in sync when the schedule changes anywhere
+  if (controlsWindow && !controlsWindow.isDestroyed()) {
+    controlsWindow.webContents.send('schedule-updated', schedule);
+  }
+  if (widgetWindow && !widgetWindow.isDestroyed()) {
+    widgetWindow.webContents.send('schedule-updated', schedule);
+  }
+});
+
+// Tell the widget which task is currently active (shown under the timer)
+ipcMain.on('set-active-task', (event, task) => {
+  if (widgetWindow && !widgetWindow.isDestroyed()) {
+    widgetWindow.webContents.send('set-active-task', task);
+  }
+});
+
+// ---- Break reminder popup ----
+ipcMain.on('show-break-popup', (event, data) => {
+  showBreakWindow(data);
+});
+
+ipcMain.on('end-break', () => {
+  if (breakWindow && !breakWindow.isDestroyed()) {
+    breakWindow.close();
+  }
+});
+
+function showBreakWindow(data) {
+  // Only one break window at a time
+  if (breakWindow && !breakWindow.isDestroyed()) {
+    breakWindow.focus();
+    return;
+  }
+
+  const { width: screenWidth, height: screenHeight } = require('electron').screen.getPrimaryDisplay().workAreaSize;
+
+  breakWindow = new BrowserWindow({
+    width: screenWidth,
+    height: screenHeight,
+    x: 0,
+    y: 0,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    resizable: false,
+    movable: false,
+    focusable: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+
+  breakWindow.loadFile(path.join(__dirname, 'windows', 'break.html'));
+
+  breakWindow.webContents.once('did-finish-load', () => {
+    breakWindow.webContents.send('break-config', {
+      duration: (data && data.duration) || settings.breakDuration,
+      message: (data && data.message) || settings.breakMessage
+    });
+    breakWindow.show();
+    breakWindow.focus();
+    breakWindow.setAlwaysOnTop(true, 'screen-saver');
+  });
+
+  breakWindow.on('closed', () => {
+    breakWindow = null;
+    // Let the widget know the break is over so work can resume
+    if (widgetWindow && !widgetWindow.isDestroyed()) {
+      widgetWindow.webContents.send('break-finished');
+    }
+  });
+}

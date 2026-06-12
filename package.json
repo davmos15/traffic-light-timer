@@ -1,7 +1,7 @@
 {
   "name": "traffic-light-timer",
-  "version": "1.0.3",
-  "description": "A desktop timer widget that transitions from green to red",
+  "version": "1.1.0",
+  "description": "A desktop timer widget and day planner with time blocks and break reminders, with a green-to-red countdown",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
@@ -13,7 +13,11 @@
     "timer",
     "desktop",
     "widget",
-    "electron"
+    "electron",
+    "day-planner",
+    "time-blocking",
+    "pomodoro",
+    "productivity"
   ],
   "author": {
     "name": "Traffic Light Timer",

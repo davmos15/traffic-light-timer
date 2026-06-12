@@ -1,53 +1,55 @@
 # Traffic Light Timer
 
-A desktop timer widget application built with Electron that visually transitions from green to red over a set duration, helping you track time with an intuitive color-coded system.
+A desktop timer widget **and day planner** built with Electron. Plan your day in time blocks, get gentle break reminders, and keep a glanceable color-coded countdown (green → yellow → red) on top of everything you do.
 
 ![Traffic Light Timer Demo](src/assets/icon.svg)
 
 ## Features
 
+### 🗓️ Day Planner *(new in 1.1)*
+- **Time Blocks**: Build your day from named tasks, each with a start time and a duration
+- **One-Click Start**: Start any block to load its duration into the timer and show it as the current task
+- **Live Editing**: Add, rename, re-time, re-order, complete, or delete blocks at any point — the plan adapts mid-day
+- **Auto-Time**: Lay every block back-to-back from your start time, automatically skipping lunch
+- **Smart Advance**: When a block's timer finishes you're prompted to start the next one — you stay in control and can always override manually
+- **Daily Rollover**: Each day starts with a fresh schedule; today's plan is saved automatically
+
+### ⏰ Day Setup *(new in 1.1)*
+- **Start / Finish / Lunch**: Set your working hours and lunch (time + length) for any given day
+- **Default Times**: Save your usual start, finish, lunch time, and lunch length, then reset any day back to them with one click
+
+### ☕ Break Reminders *(new in 1.1)*
+- **Interval Breaks**: A full-screen break prompt appears after every interval of active work (default **20 minutes**)
+- **Work Pauses**: Your task timer automatically pauses during a break and resumes when it ends
+- **Adjustable**: Set the work interval and break length (default **5 minutes**), customise the message, or toggle breaks off
+- **Flexible**: Add a minute, end early ("Back to work"), or dismiss with Esc — the widget turns blue while you're on a break
+
 ### 🎯 Main Timer Widget
-- **Compact Design**: Small, circular widget (100x100px default, customizable 20-200px)
+- **Compact Design**: Small, circular widget (100×100px default, customizable 20–200px)
 - **Color Transitions**: Smooth progression from green → yellow → red
 - **Smart Positioning**: Choose from preset positions (corners, center) or drag anywhere
 - **Adjustable Opacity**: Control widget transparency for subtle desktop integration
 - **Always on Top**: Stays visible above all other windows (toggleable)
+- **Current Task**: Hover the widget to see the active task name
 - **Completion Indicator**: Stays red when timer finishes with optional flashing
 - **Responsive Text**: Timer display scales proportionally with widget size
 - **Transparent**: Frameless design that blends with your desktop
 
-### 🎨 Visual System
-- **Smooth Animations**: 60fps color interpolation using HSL color space
-- **Clean Design**: Simple circular widget with smooth color transitions
-- **Real-time Updates**: Millisecond-precision timer with live color feedback
-
-### 🔧 Widget Positioning & Behavior
-- **Position Maintenance**: Widget size can be changed while maintaining its screen position
-- **Precision Sizing**: Minimum widget size reduced to 20px for ultra-compact use
-
 ### 🎛️ Control Panel
-- **Tabbed Interface**: Timer controls and settings in one window
+- **Three Tabs**: **Timer**, **Planner**, and **Settings** in one refreshed, card-based window
 - **Timer Controls**: Start, Stop, Pause, Resume, Restart
-- **Quick Add Time**: +1 min, +5 min, +15 min buttons
-- **Quick Reduce Time**: -1 min, -5 min, -15 min buttons
-- **Custom Duration**: Set any time with minutes:seconds input
+- **Current Task Banner**: Shows what you're working on and what's next
+- **Quick Adjust**: +1/+5/+15 min and −1/−5/−15 min buttons, plus a custom minutes:seconds setter
 - **Live Display**: Current time remaining and timer status
-- **Settings Tab**: All customization options easily accessible
 
 ### ⚙️ Settings & Customization
-- **Widget Position**: Choose from preset positions (Top Left, Top Right, Bottom Left, Bottom Right, Center)
-- **Size Adjustment**: Scale from 20px to 200px with proportional text scaling and position maintenance
-- **Opacity Control**: Adjust widget transparency from 20% to 100%
-- **Default Duration**: Set your preferred starting time
-- **Display Options**: 
-  - Toggle time display on widget
-  - Enable flashing when timer completes
-  - Always-on-top functionality
-- **Completion Alerts**:
-  - Optional popup message when timer completes
-  - Customizable completion message text
-  - Popup appears on top of other windows
-- **Persistent Storage**: All settings and timer state saved automatically
+- **Widget**: Position, size (20–200px with proportional text), and opacity (20–100%)
+- **Default Timer Duration**: Your preferred starting time
+- **Default Day Times**: Start, finish, lunch time, and lunch length
+- **Break Reminders**: Enable/disable, work interval, break length, and message
+- **Display Options**: Toggle time display, flashing on completion, and always-on-top
+- **Completion Alerts**: Optional full-screen popup message when a timer finishes
+- **Persistent Storage**: All settings, the day's schedule, and timer state are saved automatically
 
 ## Download
 
@@ -118,10 +120,25 @@ npm start
 
 ### Getting Started
 1. **Launch the app** - A small green circle appears in the bottom-right corner (default)
-2. **Click the widget** - Opens the control panel
-3. **Start timing** - Timer automatically begins with default 5-minute duration
+2. **Click the widget** - Opens the control panel (right-click works too)
+3. **Start timing** - Use the Timer tab to start the countdown
 4. **Watch the transition** - Widget smoothly changes from green to yellow to red
-5. **Timer completion** - Widget stays red when finished (optional flashing available)
+5. **Timer completion** - Widget stays red when finished (optional flashing/popup available)
+
+### Planning Your Day
+1. Click the widget and open the **Planner** tab
+2. **Set your day** - Enter today's Start, Finish, Lunch time and lunch length (or click *Use defaults*)
+3. **Add time blocks** - Type a task name, optional start time, and duration, then **Add**
+4. **Auto-time** *(optional)* - Click *Auto-time from start* to lay blocks back-to-back, skipping lunch
+5. **Start a block** - Press ▶ on a block to load its duration into the timer and mark it as the current task
+6. **Adapt anytime** - Rename, re-time, re-order, complete (○/✓), or delete blocks as the day changes
+7. **Advance** - When a block finishes you'll be prompted to start the next one — accept it or pick a different block manually
+
+### Taking Breaks
+- After every work interval (default **20 minutes** of active timing) a full-screen **break prompt** appears and your task timer pauses.
+- The widget turns **blue** while you're on a break.
+- Choose **Back to work** to end early, **+1 min** to extend, or press **Esc** to dismiss — your task timer then resumes automatically.
+- Configure the interval, break length, message, or turn breaks off entirely under **Settings → Break Reminders** (a quick toggle also lives on the Planner tab).
 
 ### Timer Controls
 - **Pause/Resume**: Click the pause button to pause, shows "Resume" when paused (with improved synchronization)
@@ -139,6 +156,8 @@ npm start
    - Size (20px - 200px) with auto-scaling text
    - Opacity (20% - 100%) for transparency control
    - Default timer duration
+   - Default day times (start, finish, lunch time and length)
+   - Break reminders (enable/disable, interval, break length, message)
    - Display options (time visibility, flashing, always on top)
    - Completion alerts (popup message with custom text)
 4. Click "Save Settings" to apply changes
@@ -194,20 +213,20 @@ The release will be available at `https://github.com/yourusername/traffic-light-
 traffic-light-timer/
 ├── package.json              # Project configuration & dependencies
 ├── src/
-│   ├── main.js              # Main Electron process
+│   ├── main.js              # Main Electron process (windows, settings, schedule, breaks)
 │   ├── timer.js             # Timer logic and state management
 │   ├── windows/             # HTML files
 │   │   ├── widget.html      # Main timer widget
-│   │   ├── controls.html    # Control panel
-│   │   └── settings.html    # Settings page
+│   │   ├── controls.html    # Control panel (Timer / Planner / Settings tabs)
+│   │   └── break.html       # Full-screen break prompt
 │   ├── css/                 # Stylesheets
 │   │   ├── widget.css       # Widget styling and shapes
 │   │   ├── controls.css     # Control panel styling
-│   │   └── settings.css     # Settings page styling
+│   │   └── break.css        # Break prompt styling
 │   ├── js/                  # Renderer processes
-│   │   ├── widget-renderer.js    # Widget window logic
-│   │   ├── controls-renderer.js  # Controls window logic
-│   │   └── settings-renderer.js  # Settings window logic
+│   │   ├── widget-renderer.js    # Widget window logic + break tracking
+│   │   ├── controls-renderer.js  # Timer, planner, and settings logic
+│   │   └── break-renderer.js     # Break prompt countdown logic
 │   └── assets/
 │       └── icon.png         # Application icon
 └── dist/                    # Built applications (after npm run build)
@@ -240,9 +259,9 @@ npm run dev
 ```
 
 ### File Structure Notes
-- Settings stored in user data directory
-- Timer state persisted automatically
-- Window positions remembered between sessions
+- Settings, the day's schedule (`schedule.json`), and timer state are stored in the user data directory
+- The schedule automatically resets to a fresh plan each new day
+- Timer state and window positions are remembered between sessions
 
 ## Troubleshooting
 
@@ -263,6 +282,7 @@ npm run dev
   - Windows: `%APPDATA%/traffic-light-timer/`
   - macOS: `~/Library/Application Support/traffic-light-timer/`
   - Linux: `~/.config/traffic-light-timer/`
+- The same directory holds `schedule.json` (today's plan) and `timerState.json`
 
 ## Contributing
 

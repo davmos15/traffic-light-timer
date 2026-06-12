@@ -2,86 +2,201 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Timer Controls</title>
+    <title>Traffic Light Timer</title>
     <link rel="stylesheet" href="../css/controls.css">
 </head>
 <body>
     <div class="controls-container">
         <div class="header-buttons">
             <button id="controls-tab" class="tab-btn active">Timer</button>
+            <button id="planner-tab" class="tab-btn">Planner</button>
             <button id="settings-tab" class="tab-btn">Settings</button>
         </div>
-        
+
+        <!-- ============ TIMER TAB ============ -->
         <div id="controls-panel" class="panel active">
-        <div class="timer-display">
-            <div id="time-display">5:00</div>
-            <div id="status-display">Running</div>
-        </div>
-        
-        <div class="control-buttons">
-            <button id="pause-resume-btn" class="control-btn">Pause</button>
-            <button id="stop-btn" class="control-btn">Stop</button>
-            <button id="restart-btn" class="control-btn">Restart</button>
-        </div>
-        
-        <div class="time-controls">
-            <h3>Adjust Time</h3>
-            <div class="add-time-buttons">
-                <button class="time-btn" data-time="60000">+1 min</button>
-                <button class="time-btn" data-time="300000">+5 min</button>
-                <button class="time-btn" data-time="900000">+15 min</button>
+            <div id="active-task-banner" class="active-task-banner" style="display: none;">
+                <div class="active-task-label">Current task</div>
+                <div id="active-task-name" class="active-task-name">—</div>
+                <div id="next-task-hint" class="next-task-hint"></div>
             </div>
-            <div class="add-time-buttons" style="margin-top: 10px;">
-                <button class="time-btn" data-time="-60000">-1 min</button>
-                <button class="time-btn" data-time="-300000">-5 min</button>
-                <button class="time-btn" data-time="-900000">-15 min</button>
+
+            <div class="timer-display">
+                <div id="time-display">5:00</div>
+                <div id="status-display">Stopped</div>
             </div>
-        </div>
-        
-        <div class="custom-time">
-            <h3>Set Custom Time</h3>
-            <div class="custom-time-input">
-                <input type="number" id="minutes-input" min="0" max="999" value="5">
-                <span>:</span>
-                <input type="number" id="seconds-input" min="0" max="59" value="0">
-                <button id="set-time-btn">Set</button>
+
+            <div class="control-buttons">
+                <button id="pause-resume-btn" class="control-btn">Start</button>
+                <button id="stop-btn" class="control-btn">Stop</button>
+                <button id="restart-btn" class="control-btn">Restart</button>
             </div>
-        </div>
-        
+
+            <div class="card time-controls">
+                <h3>Adjust Time</h3>
+                <div class="add-time-buttons">
+                    <button class="time-btn" data-time="60000">+1 min</button>
+                    <button class="time-btn" data-time="300000">+5 min</button>
+                    <button class="time-btn" data-time="900000">+15 min</button>
+                </div>
+                <div class="add-time-buttons" style="margin-top: 10px;">
+                    <button class="time-btn reduce" data-time="-60000">-1 min</button>
+                    <button class="time-btn reduce" data-time="-300000">-5 min</button>
+                    <button class="time-btn reduce" data-time="-900000">-15 min</button>
+                </div>
+            </div>
+
+            <div class="card custom-time">
+                <h3>Set Custom Time</h3>
+                <div class="custom-time-input">
+                    <input type="number" id="minutes-input" min="0" max="999" value="5">
+                    <span>:</span>
+                    <input type="number" id="seconds-input" min="0" max="59" value="0">
+                    <button id="set-time-btn">Set</button>
+                </div>
+            </div>
+
             <div class="bottom-buttons">
                 <button id="close-btn" class="bottom-btn">Close</button>
             </div>
         </div>
-        
+
+        <!-- ============ PLANNER TAB ============ -->
+        <div id="planner-panel" class="panel">
+            <div class="card">
+                <div class="card-header-row">
+                    <h3>Today's Day</h3>
+                    <button id="reset-day-defaults" class="link-btn">Use defaults</button>
+                </div>
+                <div class="day-grid">
+                    <label>Start
+                        <input type="time" id="day-start">
+                    </label>
+                    <label>Finish
+                        <input type="time" id="day-end">
+                    </label>
+                    <label>Lunch at
+                        <input type="time" id="day-lunch">
+                    </label>
+                    <label>Lunch (min)
+                        <input type="number" id="day-lunch-duration" min="0" max="240" step="5" value="60">
+                    </label>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-row">
+                    <h3>Break Reminders</h3>
+                    <label class="switch">
+                        <input type="checkbox" id="planner-breaks-enabled">
+                        <span class="switch-track"></span>
+                    </label>
+                </div>
+                <p class="muted-text" id="break-summary">Every 20 min · 5 min break</p>
+            </div>
+
+            <div class="card">
+                <h3>Time Blocks</h3>
+                <ul id="blocks-list" class="blocks-list"></ul>
+                <p id="blocks-empty" class="muted-text">No blocks yet. Add your first task below.</p>
+
+                <div class="add-block">
+                    <input type="text" id="block-name" class="block-name-input" placeholder="Task name">
+                    <div class="add-block-row">
+                        <label>Start
+                            <input type="time" id="block-start">
+                        </label>
+                        <label>Minutes
+                            <input type="number" id="block-duration" min="1" max="600" step="5" value="30">
+                        </label>
+                        <button id="add-block-btn" class="primary-btn compact">Add</button>
+                    </div>
+                </div>
+
+                <div class="planner-actions">
+                    <button id="autoschedule-btn" class="secondary-btn">Auto-time from start</button>
+                    <button id="clear-blocks-btn" class="danger-btn">Clear all</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SETTINGS TAB ============ -->
         <div id="settings-panel" class="panel">
-            <div class="setting-row">
-                <label>Position</label>
-                <select id="screen-position">
-                    <option value="top-left">Top Left</option>
-                    <option value="top-right">Top Right</option>
-                    <option value="bottom-left">Bottom Left</option>
-                    <option value="bottom-right" selected>Bottom Right</option>
-                    <option value="center">Center</option>
-                </select>
-            </div>
-            
-            <div class="setting-row">
-                <label>Size</label>
-                <div class="slider-control">
-                    <input type="range" id="size-slider" min="20" max="200" value="100" step="5">
-                    <span id="size-display">100px</span>
+            <div class="card">
+                <h3>Widget</h3>
+                <div class="setting-row">
+                    <label>Position</label>
+                    <select id="screen-position">
+                        <option value="top-left">Top Left</option>
+                        <option value="top-right">Top Right</option>
+                        <option value="bottom-left">Bottom Left</option>
+                        <option value="bottom-right" selected>Bottom Right</option>
+                        <option value="center">Center</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label>Size</label>
+                    <div class="slider-control">
+                        <input type="range" id="size-slider" min="20" max="200" value="100" step="5">
+                        <span id="size-display">100px</span>
+                    </div>
+                </div>
+                <div class="setting-row">
+                    <label>Opacity</label>
+                    <div class="slider-control">
+                        <input type="range" id="opacity-slider" min="20" max="100" value="100" step="5">
+                        <span id="opacity-display">100%</span>
+                    </div>
                 </div>
             </div>
-            
-            <div class="setting-row">
-                <label>Opacity</label>
-                <div class="slider-control">
-                    <input type="range" id="opacity-slider" min="20" max="100" value="100" step="5">
-                    <span id="opacity-display">100%</span>
+
+            <div class="card">
+                <h3>Default Timer Duration</h3>
+                <div class="duration-input">
+                    <input type="number" id="default-minutes" min="0" max="999" value="5">
+                    <span>min</span>
+                    <input type="number" id="default-seconds" min="0" max="59" value="0">
+                    <span>sec</span>
                 </div>
             </div>
-            
-            <div class="setting-group">
+
+            <div class="card">
+                <h3>Default Day Times</h3>
+                <div class="day-grid">
+                    <label>Start
+                        <input type="time" id="default-start-time">
+                    </label>
+                    <label>Finish
+                        <input type="time" id="default-end-time">
+                    </label>
+                    <label>Lunch at
+                        <input type="time" id="default-lunch-time">
+                    </label>
+                    <label>Lunch (min)
+                        <input type="number" id="default-lunch-duration" min="0" max="240" step="5" value="60">
+                    </label>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Break Reminders</h3>
+                <label class="checkbox-option">
+                    <input type="checkbox" id="breaks-enabled" checked>
+                    <span>Enable break reminders</span>
+                </label>
+                <div class="day-grid two">
+                    <label>Every (min)
+                        <input type="number" id="break-interval" min="1" max="180" step="1" value="20">
+                    </label>
+                    <label>Break (min)
+                        <input type="number" id="break-duration" min="1" max="60" step="1" value="5">
+                    </label>
+                </div>
+                <label class="field-label">Break message</label>
+                <input type="text" id="break-message" class="text-input" placeholder="Break reminder message">
+            </div>
+
+            <div class="card">
                 <h3>Display Options</h3>
                 <label class="checkbox-option">
                     <input type="checkbox" id="always-on-top" checked>
@@ -89,29 +204,30 @@
                 </label>
                 <label class="checkbox-option">
                     <input type="checkbox" id="show-timer-display" checked>
-                    <span>Show time remaining</span>
+                    <span>Show time remaining on widget</span>
                 </label>
                 <label class="checkbox-option">
                     <input type="checkbox" id="show-popup-on-complete">
-                    <span>Pop-up on finish</span>
+                    <span>Pop-up when a timer finishes</span>
                 </label>
                 <label class="checkbox-option checkbox-dependent" id="flash-option">
                     <input type="checkbox" id="flash-on-complete" disabled>
-                    <span>Flash when timer completes</span>
+                    <span>Flash widget when timer completes</span>
                 </label>
             </div>
-            
-            <div class="setting-group" id="popup-message-group" style="display: none;">
-                <h3>Popup Message</h3>
-                <input type="text" id="popup-message" placeholder="Enter completion message" value="Timer completed!">
+
+            <div class="card" id="popup-message-group" style="display: none;">
+                <h3>Completion Message</h3>
+                <input type="text" id="popup-message" class="text-input" placeholder="Enter completion message" value="Timer completed!">
             </div>
-            
+
             <div class="button-group">
                 <button id="save-settings-btn" class="primary-btn">Save Settings</button>
             </div>
+            <p id="save-confirm" class="save-confirm" style="display: none;">Settings saved ✓</p>
         </div>
     </div>
-    
+
     <script src="../js/controls-renderer.js"></script>
 </body>
 </html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Break Time</title>
+    <link rel="stylesheet" href="../css/break.css">
+</head>
+<body>
+    <div class="break-overlay">
+        <div class="break-card">
+            <div class="break-icon">☕</div>
+            <h1 class="break-title">Break Time</h1>
+            <p id="break-message" class="break-message"></p>
+            <div id="break-countdown" class="break-countdown">5:00</div>
+            <div class="break-actions">
+                <button id="add-minute-btn" class="break-btn secondary">+1 min</button>
+                <button id="skip-btn" class="break-btn primary">Back to work</button>
+            </div>
+            <p class="break-hint">Press Esc or click outside the card to dismiss</p>
+        </div>
+    </div>
+    <script src="../js/break-renderer.js"></script>
+</body>
+</html>
